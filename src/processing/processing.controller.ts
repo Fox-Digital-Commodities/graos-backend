@@ -8,16 +8,33 @@ import {
   HttpException,
   Delete
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
 import { ProcessingService } from './processing.service';
 import { ProcessingStatusDto } from '../common/dto/upload.dto';
 
 class ProcessTextDto {
+  @ApiProperty({
+    description: 'Texto do card de preços para processamento',
+    example: 'SOJA 2024/2025 FOB - GO PADRE BERNARDO\nSetembro: R$ 122,55 (US$ 21,70) - Pagamento 22/09/2025'
+  })
+  @IsString()
+  @IsNotEmpty()
   text: string;
 }
 
 class ProcessFileDto {
+  @ApiProperty({
+    description: 'ID do arquivo enviado'
+  })
+  @IsString()
+  @IsNotEmpty()
   fileId: string;
+
+  @ApiProperty({
+    description: 'Caminho do arquivo no servidor'
+  })
+  @IsString()
   filePath: string;
 }
 
