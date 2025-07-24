@@ -20,8 +20,9 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: false, // Permitir campos não listados temporariamente
       transform: true,
+      skipMissingProperties: false,
     }),
   );
 

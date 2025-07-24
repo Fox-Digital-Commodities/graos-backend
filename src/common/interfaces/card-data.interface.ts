@@ -1,8 +1,8 @@
 export interface IPrecoItem {
   embarque: string;
   pagamento: Date;
-  precoUSD?: number;
-  precoBRL: number;
+  precoUsd?: number;
+  precoBrl: number;
 }
 
 export interface IProduto {

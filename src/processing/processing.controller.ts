@@ -8,16 +8,45 @@ import {
   HttpException,
   Delete
 } from '@nestjs/common';
+<<<<<<< HEAD
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+=======
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
+>>>>>>> a531a25900eb57a0576a44cc76109bf4ac80a3d8
 import { ProcessingService } from './processing.service';
 import { ProcessingStatusDto } from '../common/dto/upload.dto';
 
 class ProcessTextDto {
+<<<<<<< HEAD
   textContent: string;
 }
 
 class ProcessFileDto {
   fileId: string;
+=======
+  @ApiProperty({
+    description: 'Texto do card de preços para processamento',
+    example: 'SOJA 2024/2025 FOB - GO PADRE BERNARDO\nSetembro: R$ 122,55 (US$ 21,70) - Pagamento 22/09/2025'
+  })
+  @IsString()
+  @IsNotEmpty()
+  text: string;
+}
+
+class ProcessFileDto {
+  @ApiProperty({
+    description: 'ID do arquivo enviado'
+  })
+  @IsString()
+  @IsNotEmpty()
+  fileId: string;
+
+  @ApiProperty({
+    description: 'Caminho do arquivo no servidor'
+  })
+  @IsString()
+>>>>>>> a531a25900eb57a0576a44cc76109bf4ac80a3d8
   filePath: string;
 }
 
@@ -75,14 +104,22 @@ export class ProcessingController {
   })
   async analyzeText(@Body() body: ProcessTextDto) {
     try {
+<<<<<<< HEAD
       if (!body.textContent || body.textContent.trim().length === 0) {
+=======
+      if (!body.text || body.text.trim().length === 0) {
+>>>>>>> a531a25900eb57a0576a44cc76109bf4ac80a3d8
         throw new HttpException(
           'Conteúdo de texto é obrigatório',
           HttpStatus.BAD_REQUEST
         );
       }
 
+<<<<<<< HEAD
       const jobId = await this.processingService.processTextPrompt(body.textContent);
+=======
+      const jobId = await this.processingService.processText(body.text);
+>>>>>>> a531a25900eb57a0576a44cc76109bf4ac80a3d8
       
       return {
         jobId,
