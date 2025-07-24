@@ -38,7 +38,7 @@ export class ProcessingService {
   /**
    * Processa texto direto com ChatGPT
    */
-  async processTextPrompt(textContent: string): Promise<string> {
+  async processText(textContent: string): Promise<string> {
     const jobId = this.generateJobId();
     this.logger.log(`Iniciando processamento de texto: ${jobId}`);
 
@@ -58,6 +58,13 @@ export class ProcessingService {
     this.processTextAsync(jobId, textContent);
 
     return jobId;
+  }
+
+  /**
+   * Processa texto direto com ChatGPT (método legado)
+   */
+  async processTextPrompt(textContent: string): Promise<string> {
+    return this.processText(textContent);
   }
 
   /**

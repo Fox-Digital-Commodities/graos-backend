@@ -13,7 +13,7 @@ import { ProcessingService } from './processing.service';
 import { ProcessingStatusDto } from '../common/dto/upload.dto';
 
 class ProcessTextDto {
-  textContent: string;
+  text: string;
 }
 
 class ProcessFileDto {
@@ -75,14 +75,14 @@ export class ProcessingController {
   })
   async analyzeText(@Body() body: ProcessTextDto) {
     try {
-      if (!body.textContent || body.textContent.trim().length === 0) {
+      if (!body.text || body.text.trim().length === 0) {
         throw new HttpException(
           'Conteúdo de texto é obrigatório',
           HttpStatus.BAD_REQUEST
         );
       }
 
-      const jobId = await this.processingService.processTextPrompt(body.textContent);
+      const jobId = await this.processingService.processText(body.text);
       
       return {
         jobId,
