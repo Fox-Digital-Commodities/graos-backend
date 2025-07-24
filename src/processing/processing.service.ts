@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ChatGPTService } from './chatgpt.service';
 import { UploadService } from '../upload/upload.service';
 import { IProcessingJob, ICardData } from '../common/interfaces/card-data.interface';
