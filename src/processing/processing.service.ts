@@ -1,5 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ChatGPTService } from './chatgpt.service';
+import { UploadService } from '../upload/upload.service';
 import { IProcessingJob, ICardData } from '../common/interfaces/card-data.interface';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -9,18 +10,27 @@ export class ProcessingService {
   private readonly logger = new Logger(ProcessingService.name);
   private processingJobs = new Map<string, IProcessingJob>();
 
-  constructor(private chatGPTService: ChatGPTService) {}
+  constructor(
+    private chatGPTService: ChatGPTService,
+    private uploadService: UploadService
+  ) {}
 
   /**
    * Processa arquivo (imagem ou texto) com ChatGPT
    */
-  async processFile(fileId: string, filePath: string): Promise<string> {
+  async processFile(fileId: string): Promise<string> {
     this.logger.log(`Iniciando processamento do arquivo: ${fileId}`);
+
+    // Buscar arquivo no UploadService
+    const fileInfo = await this.uploadService.getFileById(fileId);
+    if (!fileInfo) {
+      throw new Error(`Arquivo não encontrado: ${fileId}`);
+    }
 
     // Criar job de processamento
     const job: IProcessingJob = {
       id: fileId,
-      filePath,
+      filePath: fileInfo.path,
       status: 'pending',
       progress: 0,
       createdAt: new Date(),
@@ -30,7 +40,7 @@ export class ProcessingService {
     this.processingJobs.set(fileId, job);
 
     // Processar de forma assíncrona
-    this.processFileAsync(fileId, filePath);
+    this.processFileAsync(fileId, fileInfo.path);
 
     return fileId;
   }

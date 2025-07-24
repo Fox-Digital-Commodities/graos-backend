@@ -23,10 +23,6 @@ class ProcessFileDto {
   @IsString()
   @IsNotEmpty()
   fileId: string;
-
-  @IsString()
-  @IsNotEmpty()
-  filePath: string;
 }
 
 @ApiTags('processing')
@@ -50,7 +46,7 @@ export class ProcessingController {
   })
   async analyzeFile(@Body() body: ProcessFileDto) {
     try {
-      const jobId = await this.processingService.processFile(body.fileId, body.filePath);
+      const jobId = await this.processingService.processFile(body.fileId);
       
       return {
         jobId,
