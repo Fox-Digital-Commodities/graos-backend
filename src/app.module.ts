@@ -1,18 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join, extname } from 'path';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
+// Configurações
+import databaseConfig from './config/database.config';
+import openaiConfig from './config/openai.config';
+import appConfig from './config/app.config';
+
+// Módulos
 import { UploadModule } from './upload/upload.module';
 import { ProcessingModule } from './processing/processing.module';
 import { CardsModule } from './cards/cards.module';
 import { SpreadsheetModule } from './spreadsheet/spreadsheet.module';
-import databaseConfig from './config/database.config';
-import openaiConfig from './config/openai.config';
-import appConfig from './config/app.config';
 
 @Module({
   imports: [
@@ -26,8 +29,8 @@ import appConfig from './config/app.config';
     // Configuração do banco de dados
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) =>
-        configService.get('database'),
+      useFactory: (configService: ConfigService): TypeOrmModuleOptions =>
+        configService.get<TypeOrmModuleOptions>('database')!,
     }),
 
     // Configuração do Multer para upload de arquivos
@@ -62,7 +65,7 @@ import appConfig from './config/app.config';
     CardsModule,
     SpreadsheetModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

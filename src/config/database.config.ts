@@ -7,15 +7,16 @@ import { Preco } from '../cards/entities/preco.entity';
 export default registerAs(
   'database',
   (): TypeOrmModuleOptions => ({
-    type: 'mysql',
+    type: 'postgres',
     host: process.env.DATABASE_HOST || 'localhost',
-    port: parseInt(process.env.DATABASE_PORT, 10) || 3306,
-    username: process.env.DATABASE_USERNAME || 'root',
+    port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+    username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'password',
-    database: process.env.DATABASE_NAME || 'graos_app',
+    database: process.env.DATABASE_NAME || 'foxgraos',
     entities: [Card, Produto, Preco],
     synchronize: process.env.NODE_ENV !== 'production', // Apenas em desenvolvimento
     logging: process.env.NODE_ENV === 'development',
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   }),
 );
 

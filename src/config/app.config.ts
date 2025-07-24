@@ -1,10 +1,10 @@
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('app', () => ({
-  port: parseInt(process.env.PORT, 10) || 3001,
+  port: parseInt(process.env.PORT || '3001', 10),
   environment: process.env.NODE_ENV || 'development',
   uploadPath: process.env.UPLOAD_PATH || './uploads',
-  maxFileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 10 * 1024 * 1024, // 10MB
+  maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '10485760', 10), // 10MB
   allowedFileTypes: [
     'image/jpeg',
     'image/png',
