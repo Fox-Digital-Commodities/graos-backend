@@ -1,0 +1,1 @@
+# Grãos Backend\n\nBackend NestJS para processamento de cards de preços de grãos.\n\n## Instalação\n\n```bash\nnpm install\n```\n\n## Execução\n\n```bash\nnpm run start:dev\n```\n\n## Documentação\n\nAcesse http://localhost:3001/api/docs para ver a documentação da API.
