@@ -16,6 +16,7 @@ import { UploadModule } from './upload/upload.module';
 import { ProcessingModule } from './processing/processing.module';
 import { CardsModule } from './cards/cards.module';
 import { SpreadsheetModule } from './spreadsheet/spreadsheet.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { SpreadsheetModule } from './spreadsheet/spreadsheet.module';
     ProcessingModule,
     CardsModule,
     SpreadsheetModule,
+    MediaModule,
   ],
   controllers: [],
   providers: [],
