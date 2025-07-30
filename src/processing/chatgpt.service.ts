@@ -18,44 +18,55 @@ export class ChatGPTService {
   }
 
   private readonly EXTRACTION_PROMPT = `
-Analise este card de preços de grãos e extraia os dados em formato JSON estruturado.
-
-IMPORTANTE: Retorne APENAS o JSON válido, sem explicações ou texto adicional.
-
-Formato esperado:
-{
-  "titulo": "string (título do card ou descrição)",
-  "dataReferencia": "YYYY-MM-DD (data de referência dos preços)",
-  "cotacaoDolar": number (cotação do dólar, se mencionada),
-  "cbot": number (valor CBOT, se mencionado),
-  "observacoes": "string (observações ou disclaimers)",
-  "produtos": [
+    Analise este card de preços de grãos e extraia os dados em formato JSON estruturado.
+    
+    IMPORTANTE:
+    - Retorne APENAS o JSON válido, sem explicações ou texto adicional.
+    - O card pode se referir a diferentes empresas compradoras (ex: COFCO, LDC, etc.). Se a empresa estiver visível, registre no campo "empresa".
+    - Quando a modalidade for "FOB", significa que o preço é para entrega no armazém da empresa compradora no município indicado (ex: armazém da COFCO em Anápolis ou Buriti Alegre, GO).
+    
+    Formato esperado:
     {
-      "nome": "string (nome do produto: SOJA, MILHO, etc.)",
-      "safra": "string (período da safra: 2024/2025, etc.)",
-      "modalidade": "string (FOB, CIF, etc.)",
-      "uf": "string (estado: GO, MT, etc.)",
-      "municipio": "string (município)",
-      "precos": [
+      "titulo": "string (título do card ou descrição)",
+      "empresa": "string (ex: COFCO, LDC, etc.)",
+      "dataReferencia": "YYYY-MM-DD (data de referência dos preços, se disponível)",
+      "cotacaoDolar": number (cotação do dólar, se mencionada)",
+      "cbot": number (valor CBOT, se mencionado)",
+      "observacoes": "string (observações ou disclaimers)",
+      "produtos": [
         {
-          "embarque": "string (período de embarque: SETEMBRO, etc.)",
-          "pagamento": "YYYY-MM-DD (data de pagamento)",
-          "precoUsd": number (preço em dólares, se disponível),
-          "precoBrl": number (preço em reais)"
+          "nome": "string (SOJA, MILHO, etc.)",
+          "safra": "string (ex: 2024/2025)",
+          "modalidade": "string (ex: FOB)",
+          "uf": "string (GO, MT, etc.)",
+          "municipio": "string",
+          "precos": [
+            {
+              "embarque": "string (mês ou período, ex: SETEMBRO ou 15/08/2025)",
+              "pagamento": "YYYY-MM-DD",
+              "precoUsd": number (se disponível, ex: $ 22,45 → 22.45)",
+              "precoBrl": number (ex: R$ 125,77 → 125.77)
+            }
+          ]
         }
       ]
     }
-  ]
-}
-
-Regras de extração:
-1. Se não encontrar um campo, use null
-2. Converta datas para formato YYYY-MM-DD
-3. Extraia valores numéricos removendo símbolos de moeda
-4. Identifique produtos mesmo se não explicitamente nomeados
-5. Agrupe preços por produto
-6. Mantenha a estrutura hierárquica: Card > Produtos > Preços
-`;
+    
+    Regras de extração:
+    1. Se não encontrar um campo, use null
+    2. Converta datas para formato YYYY-MM-DD (ex: 15/8/25 → 2025-08-15)
+    3. Extraia valores numéricos removendo símbolos de moeda (R$, $, etc.)
+    4. Identifique produtos mesmo se o nome estiver implícito
+    5. Agrupe os preços por produto
+    6. Mantenha a estrutura hierárquica: Card > Produtos > Preços
+    7. Se houver safra, associe corretamente ao grupo de preços
+    8. Se a empresa compradora não estiver visível, use null
+    9. Quando for FOB, assuma entrega no armazém da empresa no município indicado (ex: FOB Anápolis = entrega no armazém da empresa em Anápolis)
+    
+    Exemplo de conversão:
+    "30/12/25" → "2025-12-30"
+    "$ 22,45" → 22.45
+    "R$ 125,77" → 125.77`;
 
   /**
    * Processa texto direto com ChatGPT
@@ -119,7 +130,7 @@ Regras de extração:
       const mimeType = this.getMimeType(filePath);
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-vision-preview',
+        model: 'gpt-4o',
         messages: [
           {
             role: 'system',
