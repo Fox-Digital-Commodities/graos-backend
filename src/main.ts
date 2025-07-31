@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors({
     origin: configService.get('app.corsOrigins'),
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-whatsapp-instance'],
     credentials: true,
   });
 
