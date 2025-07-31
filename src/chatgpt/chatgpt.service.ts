@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { GenerateSuggestionDto, MessageDto } from './dto/generate-suggestion.dto';
 
 @Injectable()
 export class ChatGPTService {
+  private readonly logger = new Logger(ChatGPTService.name);
   private openai: OpenAI;
   private assistantId: string;
 
@@ -13,94 +14,62 @@ export class ChatGPTService {
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
       baseURL: this.configService.get<string>('OPENAI_API_BASE'),
     });
-    this.assistantId = 'asst_3pb74nkgV1OLF8s9OL7LxuYX';
+
+    this.assistantId = this.configService.get<string>('OPENAI_ASSISTANT_ID') || 'asst_3pb74nkgV1OLF8s9OL7LxuYX';
+    this.validateAssistant();
   }
 
-  // Buscar instruções do assistente específico
-  private async getAssistantInstructions(): Promise<string> {
+  private async validateAssistant() {
     try {
       const assistant = await this.openai.beta.assistants.retrieve(this.assistantId);
-      return assistant.instructions || this.getDefaultInstructions();
-    } catch (error) {
-      console.warn('Erro ao buscar instruções do assistente, usando padrão:', error.message);
-      return this.getDefaultInstructions();
+      this.logger.log(`✅ Assistant carregado: ${assistant.name}`);
+    } catch (err) {
+      this.logger.error(`❌ Assistant ID inválido: ${this.assistantId}`);
+      throw new Error(
+        `ID de assistant inválido: ${this.assistantId}. Verifique se ele existe ou crie um novo assistant no painel do OpenAI.`,
+      );
     }
-  }
-
-  // Instruções padrão caso não consiga buscar do assistente
-  private getDefaultInstructions(): string {
-    return `Você é um assistente especializado em comunicação empresarial para empresa de logística e transporte de grãos.
-
-CONTEXTO:
-- Empresa: Logística e transporte de grãos
-- Tom: Profissional mas acessível
-- Foco: Respostas práticas, claras e orientadas a resultados
-
-IMPORTANTE - INTERPRETAÇÃO DE ROLES:
-- "Agente": Representa a empresa/funcionário (mensagens fromMe:true)
-- "Cliente": Representa o cliente/contato externo (mensagens fromMe:false)
-
-DIRETRIZES:
-1. Mantenha tom profissional mas acessível
-2. Seja conciso e direto ao ponto
-3. Use linguagem do setor quando apropriado
-4. Considere aspectos práticos (prazos, logística, custos)
-5. Seja proativo em oferecer soluções
-6. Gere respostas como se fosse o agente da empresa respondendo ao cliente
-
-FORMATO DE RESPOSTA:
-Para cada sugestão, forneça:
-- Texto da resposta
-- Tom (formal/informal/profissional/amigável)
-- Nível de confiança (0.0 a 1.0)
-
-Exemplo de formato:
-SUGESTÃO 1:
-Texto: "Entendi sua necessidade. Vamos verificar a disponibilidade para essa data e retorno em breve com uma proposta."
-Tom: profissional
-Confiança: 0.9`;
   }
 
   async generateResponseSuggestions(data: GenerateSuggestionDto) {
     try {
-      // Buscar instruções do assistente específico
-      const assistantInstructions = await this.getAssistantInstructions();
-      
-      // Preparar contexto da conversa
-      const conversationContext = this.buildConversationContext(data);
-      
-      // Preparar mensagens para a API v2
-      const messages = [
-        {
-          role: 'system' as const,
-          content: assistantInstructions
-        },
-        {
-          role: 'user' as const,
-          content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas para o contexto de ${data.businessContext || 'logística e transporte de grãos'}.`
-        }
-      ];
-
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 1000,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0
-      });
-
-      const response = completion.choices[0]?.message?.content;
-      
-      if (!response) {
-        throw new Error('Resposta vazia do ChatGPT');
+      const thread = await this.openai.beta.threads.create();
+      if (!thread?.id) {
+        throw new Error('Falha ao criar thread: ID indefinido');
       }
 
-      // Processar resposta e extrair sugestões
+      // Adicionar mensagens ao thread
+      for (const msg of data.messages) {
+        await this.openai.beta.threads.messages.create(thread.id, {
+          role: msg.fromMe ? 'assistant' : 'user',
+          content: msg.text,
+        });
+      }
+
+      // Executar assistant diretamente
+      const run = await this.openai.beta.threads.runs.create(thread.id, {
+        assistant_id: this.assistantId,
+      });
+
+      if (!run?.id) {
+        throw new Error('Falha ao criar execução do assistant: run.id indefinido');
+      }
+
+      const runStatus = await this.pollRunUntilComplete(thread.id, run.id);
+      if (runStatus.status !== 'completed') {
+        throw new Error(`Assistente falhou: ${runStatus.status}`);
+      }
+
+      // Obter a última mensagem da resposta
+      const messages = await this.openai.beta.threads.messages.list(thread.id);
+      const assistantMessage = messages.data.find((msg) => msg.role === 'assistant');
+      const response =
+        assistantMessage?.content[0]?.type === 'text'
+          ? assistantMessage.content[0].text.value
+          : '';
+
       const suggestions = this.parseResponseSuggestions(response);
-      
-      // Analisar contexto da última mensagem
+
       const lastMessage = data.messages[data.messages.length - 1];
       const context = {
         lastMessage: lastMessage?.text || '',
@@ -112,24 +81,29 @@ Confiança: 0.9`;
         suggestions,
         context,
         generatedAt: new Date().toISOString(),
-        model: 'gpt-4o-mini',
+        model: 'assistant-v2',
         assistantId: this.assistantId,
-        tokensUsed: completion.usage?.total_tokens || 0,
-        apiVersion: 'v2'
       };
-
     } catch (error) {
-      console.error('Erro ao gerar sugestões:', error);
+      this.logger.error('Erro ao gerar sugestões:', error);
       throw new Error(`Falha ao gerar sugestões: ${error.message}`);
     }
+  }
+
+  private async pollRunUntilComplete(threadId: string, runId: string) {
+    let status = await this.openai.beta.threads.runs.retrieve(runId, { thread_id: threadId });
+    while (status.status === 'queued' || status.status === 'in_progress') {
+      await new Promise((res) => setTimeout(res, 1000));
+      status = await this.openai.beta.threads.runs.retrieve(runId, { thread_id: threadId });
+    }
+    return status;
   }
 
   async analyzeConversation(messages: any[]) {
     try {
       const conversationText = messages
-        .filter(msg => msg.text && msg.text.trim())
-        .map(msg => {
-          // Usar role se disponível, senão usar fromMe como fallback
+        .filter((msg) => msg.text?.trim())
+        .map((msg) => {
           const role = msg.role || (msg.fromMe ? 'assistant' : 'user');
           const sender = role === 'assistant' ? 'Agente' : 'Cliente';
           return `${sender}: ${msg.text}`;
@@ -150,185 +124,85 @@ Analise a conversa e forneça:
 4. Resumo conciso
 5. Pontos principais (máximo 5)
 
-Responda em formato JSON válido.`
+Responda em formato JSON válido.`,
           },
-          {
-            role: 'user',
-            content: `Analise esta conversa:\n\n${conversationText}`
-          }
+          { role: 'user', content: `Analise esta conversa:\n\n${conversationText}` },
         ],
         temperature: 0.3,
         max_tokens: 500,
       });
 
-      const response = completion.choices[0]?.message?.content;
-      
-      if (!response) {
-        // Fallback se não conseguir parsear JSON
-        return {
-          topic: 'Conversa de negócios',
-          sentiment: 'neutro',
-          urgency: 'média',
-          summary: 'Análise não disponível',
-          keyPoints: []
-        };
-      }
-      
-      try {
-        return JSON.parse(response);
-      } catch {
-        // Fallback se não conseguir parsear JSON
-        return {
-          topic: 'Conversa de negócios',
-          sentiment: 'neutro',
-          urgency: 'média',
-          summary: 'Análise não disponível',
-          keyPoints: []
-        };
-      }
-
-    } catch (error) {
-      console.error('Erro ao analisar conversa:', error);
-      throw new Error(`Falha ao analisar conversa: ${error.message}`);
+      const response = completion.choices[0]?.message?.content || '';
+      return JSON.parse(response);
+    } catch (err) {
+      this.logger.warn('Falha ao analisar conversa, retornando fallback.', err);
+      return {
+        topic: 'Conversa de negócios',
+        sentiment: 'neutro',
+        urgency: 'média',
+        summary: 'Análise não disponível',
+        keyPoints: [],
+      };
     }
-  }
-
-  private buildConversationContext(data: GenerateSuggestionDto): string {
-    const recentMessages = data.messages.slice(-10); // Últimas 10 mensagens
-    
-    return recentMessages
-      .map(msg => {
-        // Usar role se disponível, senão usar fromMe como fallback
-        const role = msg.role || (msg.fromMe ? 'assistant' : 'user');
-        const sender = role === 'assistant' ? 'Agente' : 'Cliente';
-        const messageType = msg.type !== 'text' ? ` [${msg.type.toUpperCase()}]` : '';
-        return `${sender}${messageType}: ${msg.text || '[Mídia]'}`;
-      })
-      .join('\n');
   }
 
   private parseResponseSuggestions(response: string) {
-    const suggestions: Array<{text: string, tone: string, confidence: number}> = [];
+    const suggestions: Array<{ text: string; tone: string; confidence: number }> = [];
     const lines = response.split('\n');
-    let currentSuggestion: {text: string, tone: string, confidence: number} | null = null;
+    let current = { text: '', tone: 'profissional', confidence: 0.8 };
 
     for (const line of lines) {
-      if (line.startsWith('SUGESTÃO') || line.match(/^\d+\./)) {
-        if (currentSuggestion) {
-          suggestions.push(currentSuggestion);
-        }
-        currentSuggestion = {
-          text: '',
-          tone: 'profissional',
-          confidence: 0.8
-        };
-      } else if (line.startsWith('Texto:') && currentSuggestion) {
-        currentSuggestion.text = line.replace('Texto:', '').trim().replace(/"/g, '');
-      } else if (line.startsWith('Tom:') && currentSuggestion) {
-        currentSuggestion.tone = line.replace('Tom:', '').trim();
-      } else if (line.startsWith('Confiança:') && currentSuggestion) {
-        const confidenceMatch = line.match(/(\d+\.?\d*)/);
-        if (confidenceMatch) {
-          currentSuggestion.confidence = parseFloat(confidenceMatch[1]);
-        }
-      } else if (currentSuggestion && line.trim() && !line.includes(':')) {
-        // Se não tem formato específico, assume que é o texto da sugestão
-        if (!currentSuggestion.text) {
-          currentSuggestion.text = line.trim().replace(/"/g, '');
-        }
+      if (line.match(/^\d+\.|^SUGESTÃO/i)) {
+        if (current.text) suggestions.push(current);
+        current = { text: '', tone: 'profissional', confidence: 0.8 };
+      } else if (line.startsWith('Texto:')) {
+        current.text = line.replace('Texto:', '').trim();
+      } else if (line.startsWith('Tom:')) {
+        current.tone = line.replace('Tom:', '').trim();
+      } else if (line.startsWith('Confiança:')) {
+        const match = line.match(/(\d+\.?\d*)/);
+        if (match) current.confidence = parseFloat(match[1]);
+      } else if (line.trim() && !line.includes(':') && !current.text) {
+        current.text = line.trim();
       }
     }
+    if (current.text) suggestions.push(current);
 
-    if (currentSuggestion) {
-      suggestions.push(currentSuggestion);
-    }
-
-    // Fallback: se não conseguiu parsear, cria sugestões básicas
     if (suggestions.length === 0) {
-      const lines = response.split('\n').filter(line => line.trim());
-      for (let i = 0; i < Math.min(3, lines.length); i++) {
-        if (lines[i].trim()) {
-          suggestions.push({
-            text: lines[i].trim().replace(/^\d+\.?\s*/, '').replace(/"/g, ''),
-            tone: 'profissional',
-            confidence: 0.7
-          });
-        }
-      }
+      return response
+        .split('\n')
+        .filter((l) => l.trim())
+        .slice(0, 3)
+        .map((text) => ({
+          text: text.replace(/^\d+\.\s*/, ''),
+          tone: 'profissional',
+          confidence: 0.7,
+        }));
     }
 
-    return suggestions.filter(s => s.text && s.text.length > 10);
-  }
-
-  private buildSystemPrompt(data: GenerateSuggestionDto): string {
-    const tone = data.tone || 'profissional';
-    const businessContext = data.businessContext || 'empresa de logística e transporte de grãos';
-    
-    return `Você é um assistente especializado em comunicação empresarial para ${businessContext}.
-
-CONTEXTO:
-- Empresa: ${businessContext}
-- Tom desejado: ${tone}
-- Foco: Respostas práticas, claras e orientadas a resultados
-
-IMPORTANTE - INTERPRETAÇÃO DE ROLES:
-- "Agente": Representa a empresa/funcionário (mensagens fromMe:true)
-- "Cliente": Representa o cliente/contato externo (mensagens fromMe:false)
-
-DIRETRIZES:
-1. Mantenha tom ${tone} mas acessível
-2. Seja conciso e direto ao ponto
-3. Use linguagem do setor quando apropriado
-4. Considere aspectos práticos (prazos, logística, custos)
-5. Seja proativo em oferecer soluções
-6. Gere respostas como se fosse o agente da empresa respondendo ao cliente
-
-FORMATO DE RESPOSTA:
-Para cada sugestão, forneça:
-- Texto da resposta
-- Tom (formal/informal/profissional/amigável)
-- Nível de confiança (0.0 a 1.0)
-
-Exemplo de formato:
-SUGESTÃO 1:
-Texto: "Entendi sua necessidade. Vamos verificar a disponibilidade para essa data e retorno em breve com uma proposta."
-Tom: profissional
-Confiança: 0.9
-
-SUGESTÃO 2:
-Texto: "Posso ajudar com o transporte. Qual o tipo de carga e destino?"
-Tom: profissional
-Confiança: 0.8
-
-SUGESTÃO 3:
-Texto: "Vou consultar nossa equipe e retorno com os valores em até 2 horas."
-Tom: profissional
-Confiança: 0.9`;
+    return suggestions.filter((s: { text: string }) => s.text.length > 10);
   }
 
   private async identifyConversationTopic(messages: MessageDto[]): Promise<string> {
-    const recentTexts = messages
-      .filter(msg => msg.text && msg.text.trim())
+    const combined = messages
+      .filter((m) => m.text?.trim())
       .slice(-5)
-      .map(msg => msg.text)
-      .join(' ');
+      .map((m) => m.text)
+      .join(' ')
+      .toLowerCase();
 
-    // Identificação simples baseada em palavras-chave
     const keywords = {
-      'transporte': ['frete', 'transporte', 'caminhão', 'entrega', 'carga'],
-      'preço': ['preço', 'valor', 'custo', 'cotação', 'orçamento'],
-      'prazo': ['prazo', 'data', 'quando', 'urgente', 'rápido'],
-      'documentação': ['documento', 'nota', 'cte', 'comprovante'],
-      'pagamento': ['pagamento', 'pagar', 'receber', 'dinheiro', 'valor']
+      transporte: ['frete', 'transporte', 'caminhão', 'entrega', 'carga'],
+      preço: ['preço', 'valor', 'custo', 'cotação', 'orçamento'],
+      prazo: ['prazo', 'data', 'quando', 'urgente', 'rápido'],
+      documentação: ['documento', 'nota', 'cte', 'comprovante'],
+      pagamento: ['pagamento', 'pagar', 'receber', 'dinheiro'],
     };
 
-    for (const [topic, words] of Object.entries(keywords)) {
-      if (words.some(word => recentTexts.toLowerCase().includes(word))) {
-        return topic;
-      }
+    for (const [topic, keys] of Object.entries(keywords)) {
+      if (keys.some((k) => combined.includes(k))) return topic;
     }
 
     return 'conversa geral';
   }
 }
-
