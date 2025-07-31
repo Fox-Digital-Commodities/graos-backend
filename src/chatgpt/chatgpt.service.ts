@@ -16,47 +16,86 @@ export class ChatGPTService {
     this.assistantId = 'asst_3pb74nkgV1OLF8s9OL7LxuYX';
   }
 
+  // Buscar instruções do assistente específico
+  private async getAssistantInstructions(): Promise<string> {
+    try {
+      const assistant = await this.openai.beta.assistants.retrieve(this.assistantId);
+      return assistant.instructions || this.getDefaultInstructions();
+    } catch (error) {
+      console.warn('Erro ao buscar instruções do assistente, usando padrão:', error.message);
+      return this.getDefaultInstructions();
+    }
+  }
+
+  // Instruções padrão caso não consiga buscar do assistente
+  private getDefaultInstructions(): string {
+    return `Você é um assistente especializado em comunicação empresarial para empresa de logística e transporte de grãos.
+
+CONTEXTO:
+- Empresa: Logística e transporte de grãos
+- Tom: Profissional mas acessível
+- Foco: Respostas práticas, claras e orientadas a resultados
+
+IMPORTANTE - INTERPRETAÇÃO DE ROLES:
+- "Agente": Representa a empresa/funcionário (mensagens fromMe:true)
+- "Cliente": Representa o cliente/contato externo (mensagens fromMe:false)
+
+DIRETRIZES:
+1. Mantenha tom profissional mas acessível
+2. Seja conciso e direto ao ponto
+3. Use linguagem do setor quando apropriado
+4. Considere aspectos práticos (prazos, logística, custos)
+5. Seja proativo em oferecer soluções
+6. Gere respostas como se fosse o agente da empresa respondendo ao cliente
+
+FORMATO DE RESPOSTA:
+Para cada sugestão, forneça:
+- Texto da resposta
+- Tom (formal/informal/profissional/amigável)
+- Nível de confiança (0.0 a 1.0)
+
+Exemplo de formato:
+SUGESTÃO 1:
+Texto: "Entendi sua necessidade. Vamos verificar a disponibilidade para essa data e retorno em breve com uma proposta."
+Tom: profissional
+Confiança: 0.9`;
+  }
+
   async generateResponseSuggestions(data: GenerateSuggestionDto) {
     try {
-      // Criar thread
-      const thread = await this.openai.beta.threads.create();
-
+      // Buscar instruções do assistente específico
+      const assistantInstructions = await this.getAssistantInstructions();
+      
       // Preparar contexto da conversa
       const conversationContext = this.buildConversationContext(data);
       
-      // Adicionar mensagem ao thread
-      await this.openai.beta.threads.messages.create(thread.id, {
-        role: 'user',
-        content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas para o contexto de ${data.businessContext || 'logística e transporte de grãos'}.`
+      // Preparar mensagens para a API v2
+      const messages = [
+        {
+          role: 'system' as const,
+          content: assistantInstructions
+        },
+        {
+          role: 'user' as const,
+          content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas para o contexto de ${data.businessContext || 'logística e transporte de grãos'}.`
+        }
+      ];
+
+      const completion = await this.openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 1000,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
       });
 
-      // Executar assistente
-      const run = await this.openai.beta.threads.runs.create(thread.id, {
-        assistant_id: this.assistantId
-      });
-
-      // Aguardar conclusão
-      let runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
-      while (runStatus.status === 'queued' || runStatus.status === 'in_progress') {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
-      }
-
-      if (runStatus.status !== 'completed') {
-        throw new Error(`Assistente falhou: ${runStatus.status}`);
-      }
-
-      // Obter resposta
-      const messages = await this.openai.beta.threads.messages.list(thread.id);
-      const assistantMessage = messages.data.find(msg => msg.role === 'assistant');
+      const response = completion.choices[0]?.message?.content;
       
-      if (!assistantMessage || !assistantMessage.content[0]) {
-        throw new Error('Resposta vazia do assistente');
+      if (!response) {
+        throw new Error('Resposta vazia do ChatGPT');
       }
-
-      const response = assistantMessage.content[0].type === 'text' 
-        ? assistantMessage.content[0].text.value 
-        : '';
 
       // Processar resposta e extrair sugestões
       const suggestions = this.parseResponseSuggestions(response);
@@ -73,8 +112,10 @@ export class ChatGPTService {
         suggestions,
         context,
         generatedAt: new Date().toISOString(),
+        model: 'gpt-4o-mini',
         assistantId: this.assistantId,
-        threadId: thread.id
+        tokensUsed: completion.usage?.total_tokens || 0,
+        apiVersion: 'v2'
       };
 
     } catch (error) {
