@@ -59,6 +59,14 @@ export class GenerateSuggestionDto {
   messages: MessageDto[];
 
   @ApiProperty({ 
+    description: 'ID único da conversa/chat para vincular thread',
+    example: 'chat_12345@c.us'
+  })
+  @IsOptional()
+  @IsString()
+  conversationId?: string;
+
+  @ApiProperty({ 
     description: 'Contexto adicional sobre o negócio/empresa',
     example: 'Empresa de logística e transporte de grãos',
     required: false
