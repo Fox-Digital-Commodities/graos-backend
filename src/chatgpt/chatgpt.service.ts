@@ -48,7 +48,7 @@ export class ChatGPTService {
       
       // Buscar ou criar thread para a conversa
       const { thread, conversationThread, isReused } = await this.getOrCreateThread(
-        data.conversationId,
+        data.conversationId || `temp_${Date.now()}`,
         processedMessages.length,
         data.contactInfo
       );
@@ -321,7 +321,7 @@ Responda em formato JSON válido.`,
    * Buscar ou criar thread para conversa
    */
   private async getOrCreateThread(
-    conversationId: string,
+    conversationId: string | undefined,
     currentMessageCount: number,
     contactInfo?: any,
   ): Promise<{
@@ -330,13 +330,13 @@ Responda em formato JSON válido.`,
     isReused: boolean;
   }> {
     // Se não temos conversationId, criar thread temporária
-    if (!conversationId) {
-      this.logger.warn('ConversationId não fornecido, criando thread temporária');
+    if (!conversationId || conversationId.startsWith('temp_')) {
+      this.logger.warn('ConversationId não fornecido ou temporário, criando thread temporária');
       const thread = await this.openai.beta.threads.create();
       
       // Criar registro temporário no banco
       const conversationThread = await this.conversationThreadRepository.createForConversation(
-        `temp_${Date.now()}`,
+        conversationId || `temp_${Date.now()}`,
         thread.id,
         this.assistantId,
         { temporary: true, contactInfo }
