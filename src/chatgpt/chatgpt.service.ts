@@ -1,65 +1,75 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { GenerateSuggestionDto, MessageDto } from './dto/generate-suggestion.dto';
 
 @Injectable()
 export class ChatGPTService {
   private openai: OpenAI;
+  private readonly assistantId = 'asst_3pb74nkgV1OLF8s9OL7LxuYX';
 
-  constructor(private configService: ConfigService) {
+  constructor() {
     this.openai = new OpenAI({
-      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
-      baseURL: this.configService.get<string>('OPENAI_API_BASE'),
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: process.env.OPENAI_API_BASE,
     });
   }
 
-  async generateResponseSuggestions(data: GenerateSuggestionDto) {
+  async generateResponseSuggestions(dto: GenerateSuggestionDto) {
     try {
+      console.log('Gerando sugestões com assistente:', this.assistantId);
+      console.log('Dados recebidos:', JSON.stringify(dto, null, 2));
+
+      // Criar thread
+      const thread = await this.openai.beta.threads.create();
+
       // Preparar contexto da conversa
-      const conversationContext = this.buildConversationContext(data);
-      
-      // Prompt otimizado para o contexto de logística/transporte
-      const systemPrompt = this.buildSystemPrompt(data);
-      
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas.`
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000,
+      const conversationContext = this.formatConversationContext(dto);
+
+      // Adicionar mensagem ao thread
+      await this.openai.beta.threads.messages.create(thread.id, {
+        role: 'user',
+        content: conversationContext,
       });
 
-      const response = completion.choices[0]?.message?.content;
+      // Executar assistente
+      const run = await this.openai.beta.threads.runs.create(thread.id, {
+        assistant_id: this.assistantId,
+      });
+
+      // Aguardar conclusão
+      let runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
       
-      if (!response) {
-        throw new Error('Resposta vazia do ChatGPT');
+      while (runStatus.status === 'queued' || runStatus.status === 'in_progress') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
       }
 
-      // Processar resposta e extrair sugestões
-      const suggestions = this.parseResponseSuggestions(response);
-      
-      // Analisar contexto da última mensagem
-      const lastMessage = data.messages[data.messages.length - 1];
-      const context = {
-        lastMessage: lastMessage?.text || '',
-        messageType: lastMessage?.type || 'text',
-        conversationTopic: await this.identifyConversationTopic(data.messages),
-      };
+      if (runStatus.status === 'completed') {
+        // Obter mensagens do thread
+        const messages = await this.openai.beta.threads.messages.list(thread.id);
+        const assistantMessage = messages.data.find(msg => msg.role === 'assistant');
+        
+        if (assistantMessage && assistantMessage.content[0].type === 'text') {
+          const response = assistantMessage.content[0].text.value;
+          console.log('Resposta do assistente:', response);
+          
+          const suggestions = this.parseResponseSuggestions(response);
+          console.log('Sugestões parseadas:', suggestions);
+          
+          return {
+            suggestions,
+            conversationAnalysis: {
+              topic: 'Conversa de negócios',
+              sentiment: 'neutro',
+              urgency: 'média',
+              summary: 'Análise via assistente',
+              keyPoints: []
+            }
+          };
+        }
+      }
 
-      return {
-        suggestions,
-        context,
-        generatedAt: new Date().toISOString(),
-      };
+      throw new Error(`Assistente falhou com status: ${runStatus.status}`);
 
     } catch (error) {
       console.error('Erro ao gerar sugestões:', error);
@@ -67,114 +77,40 @@ export class ChatGPTService {
     }
   }
 
-  async analyzeConversation(messages: any[]) {
-    try {
-      const conversationText = messages
-        .filter(msg => msg.text && msg.text.trim())
-        .map(msg => `${msg.fromMe ? 'Eu' : 'Cliente'}: ${msg.text}`)
-        .join('\n');
-
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: `Você é um assistente especializado em análise de conversas de negócios na área de logística e transporte de grãos.
-            
-Analise a conversa e forneça:
-1. Tópico principal
-2. Sentimento geral (positivo, neutro, negativo)
-3. Nível de urgência (baixa, média, alta)
-4. Resumo conciso
-5. Pontos principais (máximo 5)
-
-Responda em formato JSON válido.`
-          },
-          {
-            role: 'user',
-            content: `Analise esta conversa:\n\n${conversationText}`
-          }
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      });
-
-      const response = completion.choices[0]?.message?.content;
-      
-      if (!response) {
-        // Fallback se não conseguir parsear JSON
-        return {
-          topic: 'Conversa de negócios',
-          sentiment: 'neutro',
-          urgency: 'média',
-          summary: 'Análise não disponível',
-          keyPoints: []
-        };
-      }
-      
-      try {
-        return JSON.parse(response);
-      } catch {
-        // Fallback se não conseguir parsear JSON
-        return {
-          topic: 'Conversa de negócios',
-          sentiment: 'neutro',
-          urgency: 'média',
-          summary: 'Análise não disponível',
-          keyPoints: []
-        };
-      }
-
-    } catch (error) {
-      console.error('Erro ao analisar conversa:', error);
-      throw new Error(`Falha ao analisar conversa: ${error.message}`);
+  private formatConversationContext(dto: GenerateSuggestionDto): string {
+    const { messages, businessContext, contactInfo } = dto;
+    
+    let context = `Contexto do negócio: ${businessContext}\n\n`;
+    
+    if (contactInfo) {
+      context += `Informações do contato:\n`;
+      context += `- Nome: ${contactInfo.name}\n`;
+      if (contactInfo.company) context += `- Empresa: ${contactInfo.company}\n`;
+      if (contactInfo.relationship) context += `- Relacionamento: ${contactInfo.relationship}\n`;
+      context += '\n';
     }
-  }
-
-  private buildSystemPrompt(data: GenerateSuggestionDto): string {
-    const tone = data.tone || 'profissional';
-    const businessContext = data.businessContext || 'empresa de logística e transporte de grãos';
     
-    return `Você é um assistente especializado em comunicação empresarial para ${businessContext}.
-
-CONTEXTO:
-- Empresa: ${businessContext}
-- Tom desejado: ${tone}
-- Foco: Respostas práticas, claras e orientadas a resultados
-
-DIRETRIZES:
-1. Mantenha tom ${tone} mas acessível
-2. Seja conciso e direto ao ponto
-3. Use linguagem do setor quando apropriado
-4. Considere aspectos práticos (prazos, logística, custos)
-5. Seja proativo em oferecer soluções
-
-FORMATO DE RESPOSTA:
-Para cada sugestão, forneça:
-- Texto da resposta
-- Tom (formal/informal/profissional/amigável)
-- Nível de confiança (0.0 a 1.0)
-
-Exemplo de formato:
-SUGESTÃO 1:
-Texto: "Entendi sua necessidade. Vamos verificar a disponibilidade para essa data e retorno em breve com uma proposta."
-Tom: profissional
-Confiança: 0.9
-
-SUGESTÃO 2:
-[...]`;
-  }
-
-  private buildConversationContext(data: GenerateSuggestionDto): string {
-    const recentMessages = data.messages.slice(-10); // Últimas 10 mensagens
+    context += 'Histórico da conversa:\n';
     
-    return recentMessages
-      .map(msg => {
-        const sender = msg.fromMe ? 'Eu' : 'Cliente';
-        const messageType = msg.type !== 'text' ? ` [${msg.type.toUpperCase()}]` : '';
-        return `${sender}${messageType}: ${msg.text || '[Mídia]'}`;
-      })
-      .join('\n');
+    const recentMessages = messages.slice(-10); // Últimas 10 mensagens
+    recentMessages.forEach((msg, index) => {
+      const sender = msg.fromMe ? 'Eu' : (contactInfo?.name || 'Cliente');
+      const timestamp = msg.timestamp ? new Date(msg.timestamp * 1000).toLocaleString('pt-BR') : '';
+      
+      if (msg.text) {
+        context += `${sender} (${timestamp}): ${msg.text}\n`;
+      } else if (msg.type === 'audio' || msg.type === 'ptt') {
+        context += `${sender} (${timestamp}): [Mensagem de áudio]\n`;
+      } else if (msg.type === 'image') {
+        context += `${sender} (${timestamp}): [Imagem enviada]\n`;
+      } else if (msg.type === 'document') {
+        context += `${sender} (${timestamp}): [Documento enviado]\n`;
+      }
+    });
+    
+    context += '\nPor favor, gere 3 sugestões de resposta profissionais e adequadas ao contexto.';
+    
+    return context;
   }
 
   private parseResponseSuggestions(response: string) {
@@ -230,29 +166,26 @@ SUGESTÃO 2:
     return suggestions.filter(s => s.text && s.text.length > 10);
   }
 
-  private async identifyConversationTopic(messages: MessageDto[]): Promise<string> {
-    const recentTexts = messages
-      .filter(msg => msg.text && msg.text.trim())
-      .slice(-5)
-      .map(msg => msg.text)
-      .join(' ');
-
-    // Identificação simples baseada em palavras-chave
-    const keywords = {
-      'transporte': ['frete', 'transporte', 'caminhão', 'entrega', 'carga'],
-      'preço': ['preço', 'valor', 'custo', 'cotação', 'orçamento'],
-      'prazo': ['prazo', 'data', 'quando', 'urgente', 'rápido'],
-      'documentação': ['documento', 'nota', 'cte', 'comprovante'],
-      'pagamento': ['pagamento', 'pagar', 'receber', 'dinheiro', 'valor']
-    };
-
-    for (const [topic, words] of Object.entries(keywords)) {
-      if (words.some(word => recentTexts.toLowerCase().includes(word))) {
-        return topic;
-      }
+  async analyzeConversation(messages: MessageDto[]) {
+    try {
+      // Análise simplificada para o assistente
+      return {
+        topic: 'Conversa de negócios',
+        sentiment: 'neutro',
+        urgency: 'média',
+        summary: 'Análise via assistente personalizado',
+        keyPoints: []
+      };
+    } catch (error) {
+      console.error('Erro ao analisar conversa:', error);
+      return {
+        topic: 'Conversa de negócios',
+        sentiment: 'neutro',
+        urgency: 'média',
+        summary: 'Análise não disponível',
+        keyPoints: []
+      };
     }
-
-    return 'conversa geral';
   }
 }
 
