@@ -78,7 +78,7 @@ export class TranscriptionService {
     try {
       const response = await axios.get(audioUrl, {
         responseType: 'arraybuffer',
-        timeout: 30000, // 30 segundos timeout
+        timeout: 60000, // 30 segundos timeout
         headers: {
           'User-Agent': 'WhatsApp-Audio-Transcriber/1.0'
         }
@@ -167,7 +167,7 @@ export class TranscriptionService {
     }
 
     // Transcrever apenas se menor que 30 segundos
-    return duration <= 30;
+    return duration <= 60;
   }
 }
 

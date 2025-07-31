@@ -9,13 +9,13 @@ import { ConversationThreadRepository } from './repositories/conversation-thread
 
 @Module({
   imports: [
-    ConfigModule, 
+    ConfigModule,
     TranscriptionModule,
-    TypeOrmModule.forFeature([ConversationThread])
+    TypeOrmModule.forFeature([ConversationThread]),
   ],
   controllers: [ChatGPTController],
   providers: [ChatGPTService, ConversationThreadRepository],
-  exports: [ChatGPTService],
+  exports: [ChatGPTService, ConversationThreadRepository],
 })
 export class ChatGPTModule {}
 
