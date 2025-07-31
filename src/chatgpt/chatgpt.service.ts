@@ -6,57 +6,49 @@ import { GenerateSuggestionDto, MessageDto } from './dto/generate-suggestion.dto
 @Injectable()
 export class ChatGPTService {
   private openai: OpenAI;
-  private assistantId: string;
 
   constructor(private configService: ConfigService) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
       baseURL: this.configService.get<string>('OPENAI_API_BASE'),
     });
-    this.assistantId = 'asst_3pb74nkgV1OLF8s9OL7LxuYX';
   }
 
   async generateResponseSuggestions(data: GenerateSuggestionDto) {
     try {
-      // Criar thread
-      const thread = await this.openai.beta.threads.create();
-
       // Preparar contexto da conversa
       const conversationContext = this.buildConversationContext(data);
       
-      // Adicionar mensagem ao thread
-      await this.openai.beta.threads.messages.create(thread.id, {
-        role: 'user',
-        content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas para o contexto de ${data.businessContext || 'logística e transporte de grãos'}.`
-      });
-
-      // Executar assistente
-      const run = await this.openai.beta.threads.runs.create(thread.id, {
-        assistant_id: this.assistantId
-      });
-
-      // Aguardar conclusão
-      let runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
-      while (runStatus.status === 'queued' || runStatus.status === 'in_progress') {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
-      }
-
-      if (runStatus.status !== 'completed') {
-        throw new Error(`Assistente falhou: ${runStatus.status}`);
-      }
-
-      // Obter resposta
-      const messages = await this.openai.beta.threads.messages.list(thread.id);
-      const assistantMessage = messages.data.find(msg => msg.role === 'assistant');
+      // Prompt otimizado para o contexto de logística/transporte
+      const systemPrompt = this.buildSystemPrompt(data);
       
-      if (!assistantMessage || !assistantMessage.content[0]) {
-        throw new Error('Resposta vazia do assistente');
-      }
+      // Preparar mensagens para a API v2
+      const messages = [
+        {
+          role: 'system' as const,
+          content: systemPrompt
+        },
+        {
+          role: 'user' as const,
+          content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas.`
+        }
+      ];
 
-      const response = assistantMessage.content[0].type === 'text' 
-        ? assistantMessage.content[0].text.value 
-        : '';
+      const completion = await this.openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: messages,
+        temperature: 0.7,
+        max_tokens: 1000,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
+      });
+
+      const response = completion.choices[0]?.message?.content;
+      
+      if (!response) {
+        throw new Error('Resposta vazia do ChatGPT');
+      }
 
       // Processar resposta e extrair sugestões
       const suggestions = this.parseResponseSuggestions(response);
@@ -73,6 +65,8 @@ export class ChatGPTService {
         suggestions,
         context,
         generatedAt: new Date().toISOString(),
+        model: 'gpt-4o-mini',
+        tokensUsed: completion.usage?.total_tokens || 0
       };
 
     } catch (error) {
@@ -215,6 +209,52 @@ Responda em formato JSON válido.`
     }
 
     return suggestions.filter(s => s.text && s.text.length > 10);
+  }
+
+  private buildSystemPrompt(data: GenerateSuggestionDto): string {
+    const tone = data.tone || 'profissional';
+    const businessContext = data.businessContext || 'empresa de logística e transporte de grãos';
+    
+    return `Você é um assistente especializado em comunicação empresarial para ${businessContext}.
+
+CONTEXTO:
+- Empresa: ${businessContext}
+- Tom desejado: ${tone}
+- Foco: Respostas práticas, claras e orientadas a resultados
+
+IMPORTANTE - INTERPRETAÇÃO DE ROLES:
+- "Agente": Representa a empresa/funcionário (mensagens fromMe:true)
+- "Cliente": Representa o cliente/contato externo (mensagens fromMe:false)
+
+DIRETRIZES:
+1. Mantenha tom ${tone} mas acessível
+2. Seja conciso e direto ao ponto
+3. Use linguagem do setor quando apropriado
+4. Considere aspectos práticos (prazos, logística, custos)
+5. Seja proativo em oferecer soluções
+6. Gere respostas como se fosse o agente da empresa respondendo ao cliente
+
+FORMATO DE RESPOSTA:
+Para cada sugestão, forneça:
+- Texto da resposta
+- Tom (formal/informal/profissional/amigável)
+- Nível de confiança (0.0 a 1.0)
+
+Exemplo de formato:
+SUGESTÃO 1:
+Texto: "Entendi sua necessidade. Vamos verificar a disponibilidade para essa data e retorno em breve com uma proposta."
+Tom: profissional
+Confiança: 0.9
+
+SUGESTÃO 2:
+Texto: "Posso ajudar com o transporte. Qual o tipo de carga e destino?"
+Tom: profissional
+Confiança: 0.8
+
+SUGESTÃO 3:
+Texto: "Vou consultar nossa equipe e retorno com os valores em até 2 horas."
+Tom: profissional
+Confiança: 0.9`;
   }
 
   private async identifyConversationTopic(messages: MessageDto[]): Promise<string> {
