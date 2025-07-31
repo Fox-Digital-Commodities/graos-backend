@@ -24,7 +24,6 @@ export class ConversationThread {
   }
 
   @Column({ name: 'conversation_id', nullable: false })
-  @Index() // Índice individual para conversationId
   conversationId: string;
 
   @Column({ name: 'thread_id', nullable: false })
