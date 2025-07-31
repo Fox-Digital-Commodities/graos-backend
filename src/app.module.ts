@@ -7,6 +7,7 @@ import { ProcessingModule } from './processing/processing.module';
 import { UploadModule } from './upload/upload.module';
 import { MediaModule } from './media/media.module';
 import { ChatGPTModule } from './chatgpt/chatgpt.module';
+import { TranscriptionModule } from './transcription/transcription.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 
@@ -21,6 +22,7 @@ import appConfig from './config/app.config';
     UploadModule,
     MediaModule,
     ChatGPTModule,
+    TranscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

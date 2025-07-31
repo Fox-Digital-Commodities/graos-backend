@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { GenerateSuggestionDto, MessageDto } from './dto/generate-suggestion.dto';
+import { TranscriptionService } from '../transcription/transcription.service';
 
 @Injectable()
 export class ChatGPTService {
@@ -9,7 +10,10 @@ export class ChatGPTService {
   private openai: OpenAI;
   private assistantId: string;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private transcriptionService: TranscriptionService
+  ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
       baseURL: this.configService.get<string>('OPENAI_API_BASE'),
@@ -33,13 +37,16 @@ export class ChatGPTService {
 
   async generateResponseSuggestions(data: GenerateSuggestionDto) {
     try {
+      // Processar mensagens de áudio automaticamente
+      const processedMessages = await this.processAudioMessages(data.messages);
+      
       const thread = await this.openai.beta.threads.create();
       if (!thread?.id) {
         throw new Error('Falha ao criar thread: ID indefinido');
       }
 
-      // Adicionar mensagens ao thread
-      for (const msg of data.messages) {
+      // Adicionar mensagens processadas ao thread
+      for (const msg of processedMessages) {
         await this.openai.beta.threads.messages.create(thread.id, {
           role: msg.fromMe ? 'assistant' : 'user',
           content: msg.text,
@@ -70,11 +77,11 @@ export class ChatGPTService {
 
       const suggestions = this.parseResponseSuggestions(response);
 
-      const lastMessage = data.messages[data.messages.length - 1];
+      const lastMessage = processedMessages[processedMessages.length - 1];
       const context = {
         lastMessage: lastMessage?.text || '',
         messageType: lastMessage?.type || 'text',
-        conversationTopic: await this.identifyConversationTopic(data.messages),
+        conversationTopic: await this.identifyConversationTopic(processedMessages),
       };
 
       return {
@@ -83,11 +90,67 @@ export class ChatGPTService {
         generatedAt: new Date().toISOString(),
         model: 'assistant-v2',
         assistantId: this.assistantId,
+        transcriptionsProcessed: processedMessages.filter(msg => msg.transcription).length
       };
     } catch (error) {
       this.logger.error('Erro ao gerar sugestões:', error);
       throw new Error(`Falha ao gerar sugestões: ${error.message}`);
     }
+  }
+
+  /**
+   * Processar mensagens de áudio automaticamente
+   */
+  private async processAudioMessages(messages: MessageDto[]): Promise<MessageDto[]> {
+    const processedMessages: MessageDto[] = [];
+
+    for (const message of messages) {
+      let processedMessage = { ...message };
+
+      // Verificar se é mensagem de áudio que deve ser transcrita
+      if (this.transcriptionService.shouldTranscribeAutomatically(message.type, message.duration)) {
+        try {
+          this.logger.log(`Transcrevendo áudio: ${message.type}, duração: ${message.duration}s`);
+          
+          // Usar URL da mídia se disponível, senão usar text como fallback
+          const audioUrl = message.mediaUrl || message.text;
+          
+          if (audioUrl && audioUrl.startsWith('http')) {
+            const transcriptionResult = await this.transcriptionService.transcribeAudio(
+              audioUrl, 
+              message.duration
+            );
+
+            // Atualizar mensagem com transcrição
+            processedMessage = {
+              ...message,
+              text: transcriptionResult.transcription,
+              transcription: {
+                original: transcriptionResult.transcription,
+                confidence: transcriptionResult.confidence,
+                language: transcriptionResult.language,
+                duration: transcriptionResult.duration
+              },
+              type: 'audio_transcribed' // Marcar como áudio transcrito
+            };
+
+            this.logger.log(`Áudio transcrito com sucesso: "${transcriptionResult.transcription.substring(0, 50)}..."`);
+          } else {
+            this.logger.warn(`URL de áudio inválida para mensagem: ${message.id || 'sem ID'}`);
+            // Manter mensagem original com indicação de áudio
+            processedMessage.text = processedMessage.text || '[Áudio não transcrito]';
+          }
+        } catch (error) {
+          this.logger.error(`Erro ao transcrever áudio: ${error.message}`);
+          // Em caso de erro, manter mensagem original com indicação
+          processedMessage.text = processedMessage.text || '[Áudio - falha na transcrição]';
+        }
+      }
+
+      processedMessages.push(processedMessage);
+    }
+
+    return processedMessages;
   }
 
   private async pollRunUntilComplete(threadId: string, runId: string) {

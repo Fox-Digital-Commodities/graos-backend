@@ -7,8 +7,8 @@ export class MessageDto {
   @IsString()
   text: string;
 
-  @ApiProperty({ description: 'Tipo da mensagem', enum: ['text', 'audio', 'image', 'document'] })
-  @IsEnum(['text', 'audio', 'image', 'document'])
+  @ApiProperty({ description: 'Tipo da mensagem', enum: ['text', 'audio', 'image', 'document', 'ptt', 'voice', 'audio_transcribed'] })
+  @IsEnum(['text', 'audio', 'image', 'document', 'ptt', 'voice', 'audio_transcribed'])
   type: string;
 
   @ApiProperty({ description: 'Se a mensagem é do usuário atual', default: false })
@@ -28,6 +28,24 @@ export class MessageDto {
   @IsOptional()
   @IsString()
   mediaUrl?: string;
+
+  @ApiProperty({ description: 'Duração do áudio em segundos (para mensagens de áudio)' })
+  @IsOptional()
+  duration?: number;
+
+  @ApiProperty({ description: 'ID único da mensagem' })
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @ApiProperty({ description: 'Informações de transcrição (quando aplicável)' })
+  @IsOptional()
+  transcription?: {
+    original: string;
+    confidence: number;
+    language: string;
+    duration: number;
+  };
 }
 
 export class GenerateSuggestionDto {
