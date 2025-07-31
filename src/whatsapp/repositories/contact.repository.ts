@@ -232,6 +232,8 @@ export class ContactRepository {
 
   // Busca avançada
   async search(query: {
+    search?: string;
+    whatsappId?: string;
     name?: string;
     phoneNumber?: string;
     isGroup?: boolean;
@@ -245,6 +247,21 @@ export class ContactRepository {
     const queryBuilder = this.repository
       .createQueryBuilder('contact')
       .where('contact.isActive = :isActive', { isActive: true });
+
+    // Busca genérica por nome, telefone ou WhatsApp ID
+    if (query.search) {
+      queryBuilder.andWhere(
+        '(contact.displayName ILIKE :search OR contact.pushName ILIKE :search OR contact.phoneNumber ILIKE :search OR contact.whatsappId ILIKE :search)',
+        { search: `%${query.search}%` }
+      );
+    }
+
+    // Busca específica por WhatsApp ID
+    if (query.whatsappId) {
+      queryBuilder.andWhere('contact.whatsappId = :whatsappId', { 
+        whatsappId: query.whatsappId 
+      });
+    }
 
     if (query.name) {
       queryBuilder.andWhere(

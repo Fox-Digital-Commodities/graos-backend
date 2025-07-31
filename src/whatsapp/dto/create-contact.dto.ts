@@ -52,6 +52,23 @@ export class CreateContactDto {
   labels?: string[];
 
   @IsOptional()
+  @IsString()
+  customerType?: 'produtor_rural' | 'motorista' | null;
+
+  @IsOptional()
+  @IsObject()
+  businessContext?: {
+    segment?: string;
+    company?: string;
+    location?: string;
+    customFields?: Record<string, any>;
+  };
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsOptional()
   @IsObject()
   metadata?: {
     businessCategory?: string;
@@ -103,6 +120,23 @@ export class UpdateContactDto {
   labels?: string[];
 
   @IsOptional()
+  @IsString()
+  customerType?: 'produtor_rural' | 'motorista' | null;
+
+  @IsOptional()
+  @IsObject()
+  businessContext?: {
+    segment?: string;
+    company?: string;
+    location?: string;
+    customFields?: Record<string, any>;
+  };
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsOptional()
   @IsObject()
   metadata?: {
     businessCategory?: string;
@@ -113,6 +147,14 @@ export class UpdateContactDto {
 }
 
 export class SearchContactsDto {
+  @IsOptional()
+  @IsString()
+  search?: string; // Busca genérica por nome, telefone ou WhatsApp ID
+
+  @IsOptional()
+  @IsString()
+  whatsappId?: string;
+
   @IsOptional()
   @IsString()
   name?: string;

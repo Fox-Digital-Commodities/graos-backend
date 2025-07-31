@@ -77,6 +77,8 @@ export class WhatsAppController {
       if (Object.keys(searchDto).length > 0) {
         // Busca com filtros
         const query = {
+          search: searchDto.search,
+          whatsappId: searchDto.whatsappId,
           name: searchDto.name,
           phoneNumber: searchDto.phoneNumber,
           isGroup: searchDto.isGroup,
@@ -91,7 +93,7 @@ export class WhatsAppController {
         const result = await this.contactRepository.search(query);
         return {
           success: true,
-          data: result.contacts,
+          data: { contacts: result.contacts },
           total: result.total,
           message: 'Contatos encontrados',
         };
@@ -100,7 +102,7 @@ export class WhatsAppController {
         const contacts = await this.whatsappService.getAllContacts();
         return {
           success: true,
-          data: contacts,
+          data: { contacts },
           total: contacts.length,
           message: 'Contatos recuperados com sucesso',
         };
