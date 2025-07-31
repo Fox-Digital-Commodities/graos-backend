@@ -6,49 +6,57 @@ import { GenerateSuggestionDto, MessageDto } from './dto/generate-suggestion.dto
 @Injectable()
 export class ChatGPTService {
   private openai: OpenAI;
+  private assistantId: string;
 
   constructor(private configService: ConfigService) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
       baseURL: this.configService.get<string>('OPENAI_API_BASE'),
     });
+    this.assistantId = 'asst_3pb74nkgV1OLF8s9OL7LxuYX';
   }
 
   async generateResponseSuggestions(data: GenerateSuggestionDto) {
     try {
+      // Criar thread
+      const thread = await this.openai.beta.threads.create();
+
       // Preparar contexto da conversa
       const conversationContext = this.buildConversationContext(data);
       
-      // Prompt otimizado para o contexto de logística/transporte
-      const systemPrompt = this.buildSystemPrompt(data);
-      
-      // Preparar mensagens para a API v2
-      const messages = [
-        {
-          role: 'system' as const,
-          content: systemPrompt
-        },
-        {
-          role: 'user' as const,
-          content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas.`
-        }
-      ];
-
-      const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 1000,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0
+      // Adicionar mensagem ao thread
+      await this.openai.beta.threads.messages.create(thread.id, {
+        role: 'user',
+        content: `Contexto da conversa:\n${conversationContext}\n\nGere ${data.suggestionCount || 3} sugestões de resposta apropriadas para o contexto de ${data.businessContext || 'logística e transporte de grãos'}.`
       });
 
-      const response = completion.choices[0]?.message?.content;
-      
-      if (!response) {
-        throw new Error('Resposta vazia do ChatGPT');
+      // Executar assistente
+      const run = await this.openai.beta.threads.runs.create(thread.id, {
+        assistant_id: this.assistantId
+      });
+
+      // Aguardar conclusão
+      let runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
+      while (runStatus.status === 'queued' || runStatus.status === 'in_progress') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
       }
+
+      if (runStatus.status !== 'completed') {
+        throw new Error(`Assistente falhou: ${runStatus.status}`);
+      }
+
+      // Obter resposta
+      const messages = await this.openai.beta.threads.messages.list(thread.id);
+      const assistantMessage = messages.data.find(msg => msg.role === 'assistant');
+      
+      if (!assistantMessage || !assistantMessage.content[0]) {
+        throw new Error('Resposta vazia do assistente');
+      }
+
+      const response = assistantMessage.content[0].type === 'text' 
+        ? assistantMessage.content[0].text.value 
+        : '';
 
       // Processar resposta e extrair sugestões
       const suggestions = this.parseResponseSuggestions(response);
@@ -65,8 +73,8 @@ export class ChatGPTService {
         suggestions,
         context,
         generatedAt: new Date().toISOString(),
-        model: 'gpt-4o-mini',
-        tokensUsed: completion.usage?.total_tokens || 0
+        assistantId: this.assistantId,
+        threadId: thread.id
       };
 
     } catch (error) {
