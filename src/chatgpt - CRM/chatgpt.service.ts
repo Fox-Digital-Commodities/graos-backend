@@ -391,7 +391,7 @@ Responda em formato JSON válido.`,
       return newMessages;
     }
     
-    // Se o count é igual ou menor, adicionar apenas a última mensagem para contexto
+    // Se o count é igual ou mr4enor, adicionar apenas a última mensagem para contexto
     const lastMessage = allMessages[allMessages.length - 1];
     if (lastMessage) {
       this.logger.log('Adicionando apenas última mensagem para contexto');
