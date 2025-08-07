@@ -1,17 +1,16 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { firstValueFrom } from 'rxjs';
+import axios from 'axios';
 
-import { Contact } from '../whatsapp/entities/contact.entity';
-import { Conversation } from '../whatsapp/entities/conversation.entity';
-import { Message } from '../whatsapp/entities/message.entity';
-import { KanbanBoard } from './entities/kanban-board.entity';
-import { KanbanColumn } from './entities/kanban-column.entity';
-import { KanbanCard } from './entities/kanban-card.entity';
-import { SyncContactsDto, CreateBoardFromConversationsDto, ImportContactDto } from './dto/sync-contacts.dto';
+import { Contact } from '../../whatsapp/entities/contact.entity';
+import { Conversation } from '../../whatsapp/entities/conversation.entity';
+import { Message } from '../../whatsapp/entities/message.entity';
+import { KanbanBoard } from '../entities/kanban-board.entity';
+import { KanbanColumn } from '../entities/kanban-column.entity';
+import { KanbanCard } from '../entities/kanban-card.entity';
+import { SyncContactsDto, CreateBoardFromConversationsDto, ImportContactDto } from '../dto/sync-contacts.dto';
 
 @Injectable()
 export class ContactSyncService {
@@ -30,7 +29,6 @@ export class ContactSyncService {
     private kanbanColumnRepository: Repository<KanbanColumn>,
     @InjectRepository(KanbanCard)
     private kanbanCardRepository: Repository<KanbanCard>,
-    private httpService: HttpService,
     private configService: ConfigService,
   ) {}
 
@@ -38,24 +36,24 @@ export class ContactSyncService {
     this.logger.log(`Iniciando sincronização de contatos para instância ${syncDto.instanceId}`);
 
     try {
-      // 1. Buscar conversas da API Maytapi
-      const conversations = await this.fetchConversationsFromMaytapi(syncDto.instanceId, syncDto.limit);
-      
-      // 2. Processar e salvar contatos
-      const importedContacts = [];
-      for (const conversation of conversations) {
-        const contact = await this.processAndSaveContact(conversation, syncDto.instanceId);
+         const importedContacts: Contact[] = [];
+    const conversationsData = await this.fetchConversationsFromMaytapi(syncDto.instanceId, syncDto.limit);
+
+    for (const conversationData of conversationsData) {
+      try {
+        const contact = await this.processAndSaveContact(conversationData, syncDto.instanceId);
         if (contact) {
           importedContacts.push(contact);
         }
+      } catch (error) {
+        this.logger.error(`Erro ao processar contato: ${error.message}`);
       }
 
-      // 3. Buscar mensagens para cada conversa
-      for (const contact of importedContacts) {
-        if (contact.conversationId) {
-          await this.syncMessagesForConversation(contact.conversationId, syncDto.instanceId);
-        }
+      // Sincronizar mensagens se solicitado
+      if (syncDto.syncMessages && contact?.conversationId) {
+        await this.syncMessagesForConversation(contact.conversationId, syncDto.instanceId);
       }
+    }
 
       this.logger.log(`Sincronização concluída: ${importedContacts.length} contatos processados`);
 
@@ -82,19 +80,17 @@ export class ContactSyncService {
     }
 
     try {
-      const response = await firstValueFrom(
-        this.httpService.get(`${maytapiUrl}/${instanceId}/listChats`, {
-          headers: {
-            'x-maytapi-key': maytapiToken,
-          },
-          params: {
-            limit,
-            type: 'all', // individual, group, all
-          },
-        }),
-      );
+      const response = await axios.get(`${maytapiUrl}/${instanceId}/listChats`, {
+        headers: {
+          'x-maytapi-key': maytapiToken,
+        },
+        params: {
+          limit,
+          type: 'all', // individual, group, all
+        },
+      });
 
-      return response.data.data || [];
+      return response.data?.data || [];
     } catch (error) {
       this.logger.error(`Erro ao buscar conversas do Maytapi: ${error.message}`);
       throw error;
@@ -189,19 +185,17 @@ export class ContactSyncService {
     const maytapiToken = this.configService.get('MAYTAPI_TOKEN');
 
     try {
-      const response = await firstValueFrom(
-        this.httpService.get(`${maytapiUrl}/${instanceId}/listMessages`, {
-          headers: {
-            'x-maytapi-key': maytapiToken,
-          },
-          params: {
-            chatId: conversationId,
-            limit,
-          },
-        }),
-      );
+      const response = await axios.get(`${maytapiUrl}/${instanceId}/listMessages`, {
+        headers: {
+          'x-maytapi-key': maytapiToken,
+        },
+        params: {
+          chatId: conversationId,
+          limit,
+        },
+      });
 
-      const messages = response.data.data || [];
+      const messages = response.data?.data || [];
       
       for (const messageData of messages) {
         await this.processAndSaveMessage(messageData, conversationId, instanceId);
@@ -565,39 +559,37 @@ export class ContactSyncService {
     return description;
   }
 
-  private generateLabels(messageText: string, boardType: string): string[] {
-    const labels = [];
-    const text = messageText.toLowerCase();
+  private extractLabelsFromText(text: string, boardType: string): string[] {
+    const labels: string[] = [];
+    const lowerText = text.toLowerCase();
 
     // Labels gerais
-    if (text.includes('urgente')) labels.push('Urgente');
-    if (text.includes('importante')) labels.push('Importante');
+    if (lowerText.includes('urgente')) labels.push('Urgente');
+    if (lowerText.includes('importante')) labels.push('Importante');
 
-    // Labels por tipo de board
+    // Labels específicos por tipo de board
     if (boardType === 'logistics') {
-      if (text.includes('entrega')) labels.push('Entrega');
-      if (text.includes('transporte')) labels.push('Transporte');
-      if (text.includes('frete')) labels.push('Frete');
-      if (text.includes('prazo')) labels.push('Prazo');
+      if (lowerText.includes('entrega')) labels.push('Entrega');
+      if (lowerText.includes('transporte')) labels.push('Transporte');
+      if (lowerText.includes('frete')) labels.push('Frete');
+      if (lowerText.includes('prazo')) labels.push('Prazo');
     }
 
     if (boardType === 'commercial') {
-      if (text.includes('cotação') || text.includes('preço')) labels.push('Cotação');
-      if (text.includes('compra') || text.includes('pedido')) labels.push('Pedido');
-      if (text.includes('proposta')) labels.push('Proposta');
-      if (text.includes('desconto')) labels.push('Desconto');
+      if (lowerText.includes('cotação') || lowerText.includes('preço')) labels.push('Cotação');
+      if (lowerText.includes('compra') || lowerText.includes('pedido')) labels.push('Pedido');
+      if (lowerText.includes('proposta')) labels.push('Proposta');
+      if (lowerText.includes('desconto')) labels.push('Desconto');
     }
 
-    // Labels de produtos (grãos)
-    if (text.includes('soja')) labels.push('Soja');
-    if (text.includes('milho')) labels.push('Milho');
-    if (text.includes('trigo')) labels.push('Trigo');
-    if (text.includes('arroz')) labels.push('Arroz');
+    // Labels de produtos
+    if (lowerText.includes('soja')) labels.push('Soja');
+    if (lowerText.includes('milho')) labels.push('Milho');
+    if (lowerText.includes('trigo')) labels.push('Trigo');
+    if (lowerText.includes('arroz')) labels.push('Arroz');
 
     return labels;
-  }
-
-  private calculateDueDate(priority: string, boardType: string): Date | null {
+  }  private calculateDueDate(priority: string, boardType: string): Date | null {
     const now = new Date();
     const daysToAdd = {
       urgent: 1,
