@@ -1,4 +1,11 @@
-import { IsString, IsOptional, IsNumber, IsDateString, ValidateNested, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsDateString,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePrecoDto {
@@ -71,4 +78,3 @@ export class CreateCardDto {
   @Type(() => CreateProdutoDto)
   produtos: CreateProdutoDto[];
 }
-

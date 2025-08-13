@@ -8,12 +8,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  // Configuração CORS
+  // Configuração CORS - Permitindo todas as origens
   app.enableCors({
-    origin: configService.get('app.corsOrigins'),
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    origin: '*', // Aceitar requisições de qualquer origem
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-whatsapp-instance'],
-    credentials: true,
+    credentials: false, // Deve ser false quando origin é '*'
   });
 
   // Validação global
@@ -43,10 +43,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = configService.get('app.port');
+  const port = configService.get<number>('app.port') || 3001;
   await app.listen(port, '0.0.0.0');
   
   console.log(`🚀 Aplicação rodando em: http://localhost:${port}`);
   console.log(`📚 Documentação Swagger: http://localhost:${port}/api/docs`);
 }
-bootstrap();
+void bootstrap();

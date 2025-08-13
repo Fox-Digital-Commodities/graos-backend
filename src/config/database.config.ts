@@ -17,10 +17,20 @@ export default registerAs(
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'password',
     database: process.env.DATABASE_NAME || 'foxgraos',
-    entities: [Card, Produto, Preco, ConversationThread, Contact, Conversation, Message],
-    synchronize: process.env.NODE_ENV !== 'production', // Apenas em desenvolvimento
-    logging: process.env.NODE_ENV === 'development',
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    entities: [
+      Card,
+      Produto,
+      Preco,
+      ConversationThread,
+      Contact,
+      Conversation,
+      Message,
+    ],
+    synchronize: process.env.NODE_ENV !== 'production',
+    logging: false,
+    ssl:
+      process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : false,
   }),
 );
-

@@ -11,7 +11,13 @@ import {
   Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -47,30 +53,43 @@ export class UploadController {
     status: 400,
     description: 'Arquivo inválido ou não fornecido',
   })
-  @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, callback) => {
-        const uniqueSuffix = uuidv4();
-        const ext = extname(file.originalname);
-        callback(null, `${uniqueSuffix}${ext}`);
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, callback) => {
+          const uniqueSuffix = uuidv4();
+          const ext = extname(file.originalname);
+          callback(null, `${uniqueSuffix}${ext}`);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        const allowedTypes = [
+          'image/png',
+          'image/jpeg',
+          'image/jpg',
+          'application/pdf',
+          'text/plain',
+        ];
+        if (allowedTypes.includes(file.mimetype)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Tipo de arquivo não permitido'), false);
+        }
+      },
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
       },
     }),
-    fileFilter: (req, file, callback) => {
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf', 'text/plain'];
-      if (allowedTypes.includes(file.mimetype)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Tipo de arquivo não permitido'), false);
-      }
-    },
-    limits: {
-      fileSize: 10 * 1024 * 1024, // 10MB
-    },
-  }))
-  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<UploadResponseDto> {
+  )
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UploadResponseDto> {
     if (!file) {
-      throw new HttpException('Nenhum arquivo foi fornecido', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Nenhum arquivo foi fornecido',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     try {
@@ -111,14 +130,19 @@ export class UploadController {
     },
   })
   @UseInterceptors(FileInterceptor('files'))
-  async uploadMultipleFiles(@UploadedFile() files: Express.Multer.File[]): Promise<UploadResponseDto[]> {
+  async uploadMultipleFiles(
+    @UploadedFile() files: Express.Multer.File[],
+  ): Promise<UploadResponseDto[]> {
     if (!files || files.length === 0) {
-      throw new HttpException('Nenhum arquivo foi fornecido', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Nenhum arquivo foi fornecido',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     try {
       const results = await Promise.all(
-        files.map(file => this.uploadService.saveFile(file))
+        files.map((file) => this.uploadService.saveFile(file)),
       );
       return results;
     } catch (error) {
@@ -218,7 +242,11 @@ export class UploadController {
       },
     },
   })
-  async healthCheck(): Promise<{ status: string; message: string; timestamp: string }> {
+  async healthCheck(): Promise<{
+    status: string;
+    message: string;
+    timestamp: string;
+  }> {
     return {
       status: 'ok',
       message: 'Serviço de upload funcionando corretamente',
@@ -226,4 +254,3 @@ export class UploadController {
     };
   }
 }
-
