@@ -7,19 +7,25 @@ export interface IPrecoItem {
 
 export interface IProduto {
   nome: string;
+  idProduto?: string | null;
   safra?: string;
   modalidade?: string;
   uf?: string;
   municipio?: string;
+  idFoxAddresses?: string | null;
   precos: IPrecoItem[];
 }
 
 export interface ICardData {
   titulo?: string;
+  empresa?: string;
   dataReferencia: Date;
   cotacaoDolar?: number;
   cbot?: number;
   observacoes?: string;
+  idFoxUser?: string | null;
+  endereco?: string | null;
+  janelaRetirada?: string | null;
   produtos: IProduto[];
 }
 
@@ -33,4 +39,3 @@ export interface IProcessingJob {
   createdAt: Date;
   updatedAt: Date;
 }
-

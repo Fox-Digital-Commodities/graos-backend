@@ -1,7 +1,10 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ChatGPTService } from './chatgpt.service';
 import { UploadService } from '../upload/upload.service';
-import { IProcessingJob, ICardData } from '../common/interfaces/card-data.interface';
+import {
+  IProcessingJob,
+  ICardData,
+} from '../common/interfaces/card-data.interface';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -12,7 +15,7 @@ export class ProcessingService {
 
   constructor(
     private chatGPTService: ChatGPTService,
-    private uploadService: UploadService
+    private uploadService: UploadService,
   ) {}
 
   /**
@@ -34,7 +37,7 @@ export class ProcessingService {
       status: 'pending',
       progress: 0,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     this.processingJobs.set(fileId, job);
@@ -59,7 +62,7 @@ export class ProcessingService {
       status: 'pending',
       progress: 0,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     this.processingJobs.set(jobId, job);
@@ -86,7 +89,9 @@ export class ProcessingService {
   async getProcessingStatus(jobId: string): Promise<IProcessingJob> {
     const job = this.processingJobs.get(jobId);
     if (!job) {
-      throw new NotFoundException(`Job de processamento não encontrado: ${jobId}`);
+      throw new NotFoundException(
+        `Job de processamento não encontrado: ${jobId}`,
+      );
     }
     return job;
   }
@@ -108,7 +113,10 @@ export class ProcessingService {
   /**
    * Processamento assíncrono de arquivo
    */
-  private async processFileAsync(jobId: string, filePath: string): Promise<void> {
+  private async processFileAsync(
+    jobId: string,
+    filePath: string,
+  ): Promise<void> {
     const job = this.processingJobs.get(jobId);
     if (!job) return;
 
@@ -153,10 +161,9 @@ export class ProcessingService {
       job.updatedAt = new Date();
 
       this.logger.log(`Processamento concluído: ${jobId}`);
-
     } catch (error) {
       this.logger.error(`Erro no processamento ${jobId}:`, error.message);
-      
+
       job.status = 'error';
       job.error = error.message;
       job.updatedAt = new Date();
@@ -166,7 +173,10 @@ export class ProcessingService {
   /**
    * Processamento assíncrono de texto
    */
-  private async processTextAsync(jobId: string, textContent: string): Promise<void> {
+  private async processTextAsync(
+    jobId: string,
+    textContent: string,
+  ): Promise<void> {
     const job = this.processingJobs.get(jobId);
     if (!job) return;
 
@@ -190,10 +200,12 @@ export class ProcessingService {
       job.updatedAt = new Date();
 
       this.logger.log(`Processamento de texto concluído: ${jobId}`);
-
     } catch (error) {
-      this.logger.error(`Erro no processamento de texto ${jobId}:`, error.message);
-      
+      this.logger.error(
+        `Erro no processamento de texto ${jobId}:`,
+        error.message,
+      );
+
       job.status = 'error';
       job.error = error.message;
       job.updatedAt = new Date();

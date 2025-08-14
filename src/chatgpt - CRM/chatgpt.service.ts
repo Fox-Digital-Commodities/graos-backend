@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import { GenerateSuggestionDto, MessageDto } from './dto/generate-suggestion.dto';
+import {
+  GenerateSuggestionDto,
+  MessageDto,
+} from './dto/generate-suggestion.dto';
 import { TranscriptionService } from '../transcription/transcription.service';
 import { ConversationThreadRepository } from './repositories/conversation-thread.repository';
 
@@ -45,20 +48,26 @@ export class ChatGPTService {
     try {
       // Processar mensagens de áudio automaticamente
       const processedMessages = await this.processAudioMessages(data.messages);
-      
-      // Buscar ou criar thread para a conversa
-      const { thread, conversationThread, isReused } = await this.getOrCreateThread(
-        data.conversationId || `temp_${Date.now()}`,
-        processedMessages.length,
-        data.contactInfo
-      );
 
-      this.logger.log(`Thread ${isReused ? 'reutilizada' : 'criada'}: ${thread.id} para conversa: ${data.conversationId}`);
+      // Buscar ou criar thread para a conversa
+      const { thread, conversationThread, isReused } =
+        await this.getOrCreateThread(
+          data.conversationId || `temp_${Date.now()}`,
+          processedMessages.length,
+          data.contactInfo,
+        );
+
+      this.logger.log(
+        `Thread ${isReused ? 'reutilizada' : 'criada'}: ${thread.id} para conversa: ${data.conversationId}`,
+      );
 
       // Se thread foi reutilizada, adicionar apenas mensagens novas
       // Se thread é nova, adicionar todas as mensagens
-      const messagesToAdd = isReused 
-        ? this.getNewMessages(processedMessages, conversationThread.lastMessageCount)
+      const messagesToAdd = isReused
+        ? this.getNewMessages(
+            processedMessages,
+            conversationThread.lastMessageCount,
+          )
         : processedMessages;
 
       // Adicionar mensagens ao thread
@@ -75,7 +84,9 @@ export class ChatGPTService {
       });
 
       if (!run?.id) {
-        throw new Error('Falha ao criar execução do assistant: run.id indefinido');
+        throw new Error(
+          'Falha ao criar execução do assistant: run.id indefinido',
+        );
       }
 
       const runStatus = await this.pollRunUntilComplete(thread.id, run.id);
@@ -85,7 +96,9 @@ export class ChatGPTService {
 
       // Obter a última mensagem da resposta
       const messages = await this.openai.beta.threads.messages.list(thread.id);
-      const assistantMessage = messages.data.find((msg) => msg.role === 'assistant');
+      const assistantMessage = messages.data.find(
+        (msg) => msg.role === 'assistant',
+      );
       const response =
         assistantMessage?.content[0]?.type === 'text'
           ? assistantMessage.content[0].text.value
@@ -107,16 +120,19 @@ export class ChatGPTService {
           contactName: data.contactInfo?.name,
           contactPhone: data.contactInfo?.company,
           businessContext: data.businessContext,
-          lastMessageType: processedMessages[processedMessages.length - 1]?.type,
-          conversationTopic: await this.identifyConversationTopic(processedMessages),
-        }
+          lastMessageType:
+            processedMessages[processedMessages.length - 1]?.type,
+          conversationTopic:
+            await this.identifyConversationTopic(processedMessages),
+        },
       );
 
       const lastMessage = processedMessages[processedMessages.length - 1];
       const context = {
         lastMessage: lastMessage?.text || '',
         messageType: lastMessage?.type || 'text',
-        conversationTopic: await this.identifyConversationTopic(processedMessages),
+        conversationTopic:
+          await this.identifyConversationTopic(processedMessages),
       };
 
       return {
@@ -125,14 +141,16 @@ export class ChatGPTService {
         generatedAt: new Date().toISOString(),
         model: 'assistant-v2',
         assistantId: this.assistantId,
-        transcriptionsProcessed: processedMessages.filter(msg => msg.transcription).length,
+        transcriptionsProcessed: processedMessages.filter(
+          (msg) => msg.transcription,
+        ).length,
         threadInfo: {
           threadId: thread.id,
           conversationThreadId: conversationThread.id,
           isReused,
           totalSuggestions: conversationThread.totalSuggestionsGenerated + 1,
-          messagesAdded: messagesToAdd.length
-        }
+          messagesAdded: messagesToAdd.length,
+        },
       };
     } catch (error) {
       this.logger.error('Erro ao gerar sugestões:', error);
@@ -331,51 +349,68 @@ Responda em formato JSON válido.`,
   }> {
     // Se não temos conversationId, criar thread temporária
     if (!conversationId || conversationId.startsWith('temp_')) {
-      this.logger.warn('ConversationId não fornecido ou temporário, criando thread temporária');
-      const thread = await this.openai.beta.threads.create();
-      
-      // Criar registro temporário no banco
-      const conversationThread = await this.conversationThreadRepository.createForConversation(
-        conversationId || `temp_${Date.now()}`,
-        thread.id,
-        this.assistantId,
-        { temporary: true, contactInfo }
+      this.logger.warn(
+        'ConversationId não fornecido ou temporário, criando thread temporária',
       );
+      const thread = await this.openai.beta.threads.create();
+
+      // Criar registro temporário no banco
+      const conversationThread =
+        await this.conversationThreadRepository.createForConversation(
+          conversationId || `temp_${Date.now()}`,
+          thread.id,
+          this.assistantId,
+          { temporary: true, contactInfo },
+        );
 
       return { thread, conversationThread, isReused: false };
     }
 
     // Buscar thread existente para a conversa
-    const existingThread = await this.conversationThreadRepository.findActiveByConversationId(conversationId);
+    const existingThread =
+      await this.conversationThreadRepository.findActiveByConversationId(
+        conversationId,
+      );
 
     if (existingThread && existingThread.canReuse(currentMessageCount)) {
-      this.logger.log(`Reutilizando thread existente: ${existingThread.threadId}`);
-      
+      this.logger.log(
+        `Reutilizando thread existente: ${existingThread.threadId}`,
+      );
+
       // Verificar se thread ainda existe no OpenAI
       try {
-        const thread = await this.openai.beta.threads.retrieve(existingThread.threadId);
+        const thread = await this.openai.beta.threads.retrieve(
+          existingThread.threadId,
+        );
         return { thread, conversationThread: existingThread, isReused: true };
       } catch (error) {
-        this.logger.warn(`Thread ${existingThread.threadId} não encontrada no OpenAI, criando nova`);
+        this.logger.warn(
+          `Thread ${existingThread.threadId} não encontrada no OpenAI, criando nova`,
+        );
         // Desativar thread inválida
-        await this.conversationThreadRepository.deactivateThread(existingThread.id);
+        await this.conversationThreadRepository.deactivateThread(
+          existingThread.id,
+        );
       }
     }
 
     // Criar nova thread
     this.logger.log(`Criando nova thread para conversa: ${conversationId}`);
     const thread = await this.openai.beta.threads.create();
-    
+
     // Desativar threads antigas da conversa
-    await this.conversationThreadRepository.deactivateAllForConversation(conversationId);
-    
-    // Criar novo registro no banco
-    const conversationThread = await this.conversationThreadRepository.createForConversation(
+    await this.conversationThreadRepository.deactivateAllForConversation(
       conversationId,
-      thread.id,
-      this.assistantId,
-      { contactInfo }
     );
+
+    // Criar novo registro no banco
+    const conversationThread =
+      await this.conversationThreadRepository.createForConversation(
+        conversationId,
+        thread.id,
+        this.assistantId,
+        { contactInfo },
+      );
 
     return { thread, conversationThread, isReused: false };
   }
@@ -383,21 +418,26 @@ Responda em formato JSON válido.`,
   /**
    * Obter apenas mensagens novas baseado no último count
    */
-  private getNewMessages(allMessages: MessageDto[], lastMessageCount: number): MessageDto[] {
+  private getNewMessages(
+    allMessages: MessageDto[],
+    lastMessageCount: number,
+  ): MessageDto[] {
     // Se temos mais mensagens que o último count, pegar apenas as novas
     if (allMessages.length > lastMessageCount) {
       const newMessages = allMessages.slice(lastMessageCount);
-      this.logger.log(`Adicionando ${newMessages.length} mensagens novas (total: ${allMessages.length}, último: ${lastMessageCount})`);
+      this.logger.log(
+        `Adicionando ${newMessages.length} mensagens novas (total: ${allMessages.length}, último: ${lastMessageCount})`,
+      );
       return newMessages;
     }
-    
+
     // Se o count é igual ou mr4enor, adicionar apenas a última mensagem para contexto
     const lastMessage = allMessages[allMessages.length - 1];
     if (lastMessage) {
       this.logger.log('Adicionando apenas última mensagem para contexto');
       return [lastMessage];
     }
-    
+
     return [];
   }
 
