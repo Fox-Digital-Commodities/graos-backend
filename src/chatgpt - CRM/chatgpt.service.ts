@@ -26,22 +26,7 @@ export class ChatGPTService {
 
     this.assistantId =
       this.configService.get<string>('OPENAI_ASSISTANT_ID') ||
-      'asst_3pb74nkgV1OLF8s9OL7LxuYX';
-    this.validateAssistant();
-  }
-
-  private async validateAssistant() {
-    try {
-      const assistant = await this.openai.beta.assistants.retrieve(
-        this.assistantId,
-      );
-      this.logger.log(`✅ Assistant carregado: ${assistant.name}`);
-    } catch (err) {
-      this.logger.error(`❌ Assistant ID inválido: ${this.assistantId}`);
-      throw new Error(
-        `ID de assistant inválido: ${this.assistantId}. Verifique se ele existe ou crie um novo assistant no painel do OpenAI.`,
-      );
-    }
+      'asst_X3pjdKOIgrLLzHmcTBs9GJWb';
   }
 
   async generateResponseSuggestions(data: GenerateSuggestionDto) {
