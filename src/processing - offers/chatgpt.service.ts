@@ -15,9 +15,13 @@ export class ChatGPTService implements OnModuleInit {
   private extractionPrompt: string = '';
 
   constructor(private configService: ConfigService) {
+    // Usar diretamente as variáveis de ambiente para a API da OpenAI
+    this.logger.log(`Inicializando OpenAI com API direta`);
+
+    // Configuração direta da OpenAI usando variáveis de ambiente
     this.openai = new OpenAI({
-      apiKey: this.configService.get('openai.apiKey'),
-      baseURL: this.configService.get('openai.apiBase'),
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: process.env.OPENAI_API_BASE || 'https://api.openai.com/v1',
     });
   }
 

@@ -19,9 +19,10 @@ export class ChatGPTService {
     private transcriptionService: TranscriptionService,
     private conversationThreadRepository: ConversationThreadRepository,
   ) {
+    // Usar diretamente as variáveis de ambiente para a API da OpenAI
     this.openai = new OpenAI({
-      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
-      baseURL: this.configService.get<string>('OPENAI_API_BASE'),
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: process.env.OPENAI_API_BASE || 'https://api.openai.com/v1',
     });
 
     this.assistantId =
