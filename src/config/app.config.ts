@@ -12,6 +12,6 @@ export default registerAs('app', () => ({
     'text/plain',
     'application/pdf',
   ],
-  corsOrigins: process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'],
+  corsOrigins: '*', // Aceitar todas as origens
 }));
 

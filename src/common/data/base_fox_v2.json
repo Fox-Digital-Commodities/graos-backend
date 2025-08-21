@@ -1,0 +1,907 @@
+[
+  {
+    "EMPRESA": "CUTRALE",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "67f933ee975d40c2396cac8c",
+    "ID DO SISTEMA": "67f933ed975d40109a6cac89"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "663909783269c959b47a0e7e",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "6720fd754a3fd828ef05ea6b",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "62ee9c43c0bc67840c80dc2c",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "NIQUELANDIA",
+    "ID CIDADE": "5e90809385d763273b8cfcd8",
+    "ID ENDEREÇO": "672134ac4b4243833b9d5f35",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "PADRE BERNARDO",
+    "ID CIDADE": "5e90809385d763273b8cfd50",
+    "ID ENDEREÇO": "67fd33862fc2747ae0d72262",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "PADRE BERNARDO",
+    "ID CIDADE": "5e90809385d763273b8cfd50",
+    "ID ENDEREÇO": "684728a6bebecf0fd21955c7",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "PALMEIRAS DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd70",
+    "ID ENDEREÇO": "684728a6bebecf2ce61955bb",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "COCALZINHO DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd49",
+    "ID ENDEREÇO": "67814adcbed0ed5582ac75fa",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "ITUMBIARA",
+    "ID CIDADE": "5e90809385d763273b8cfd7f",
+    "ID ENDEREÇO": "67d1b47362453a5e6f4eb844",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "BURITI ALEGRE",
+    "ID CIDADE": "5e90809385d763273b8cfd79",
+    "ID ENDEREÇO": "688269fb8343d80ca5c421e0",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "66b112d4e94714392c4a58f1",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "6876ad3ec70581b6e69ca1c9",
+    "ID ENDEREÇO": "6876ad3ec70581b6e69ca1c9",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "NOVA CRIXÁS",
+    "ID CIDADE": "5e90809385d763273b8cfcb8",
+    "ID ENDEREÇO": "68826ff15f1c538876f2d5c9",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "65d0211874b28b138aedad2f",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "BELA VISTA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd29",
+    "ID ENDEREÇO": "6876ad3ec70581b6e69ca1c9",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "64c2c3e2b3b3a76ea49b30fa",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "GOIATUBA",
+    "ID CIDADE": "5e90809385d763273b8cfd7d",
+    "ID ENDEREÇO": "684728a6bebecf0db51955c1",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "ANÁPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfcfc",
+    "ID ENDEREÇO": "68827ef93f3dcc45e94879ba",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "PONTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd86",
+    "ID ENDEREÇO": "68828fb489b9840471907e98",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "COFCO",
+    "CIDADE": "SÃO MIGUEL DO ARAGUAIA",
+    "ID CIDADE": "5e90809385d763273b8cfcba",
+    "ID ENDEREÇO": "684728a6bebecf0fd21955c7",
+    "ID DO SISTEMA": "66390731b07b7fd3f127cab0"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "NIQUELANDIA",
+    "ID CIDADE": "5e90809385d763273b8cfcd8",
+    "ID ENDEREÇO": "672134ac4b4243833b9d5f35",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "NOVA CRIXÁS",
+    "ID CIDADE": "5e90809385d763273b8cfcb8",
+    "ID ENDEREÇO": "67ffd16307d19d5ea200e6f3",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "6717b2c7ea05cf550aa0a302",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "COCALZINHO DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd49",
+    "ID ENDEREÇO": "67814adcbed0ed5582ac75fa",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "SILVÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd91",
+    "ID ENDEREÇO": "64affbaf5474b34103be1683",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "SILVÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd91",
+    "ID ENDEREÇO": "65ca48c0f9725f6f8e6b38b3",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "MONTIVIDIU",
+    "ID CIDADE": "5e90809385d763273b8cfd60",
+    "ID ENDEREÇO": "65c11a2de4ce9ecda4873f0a",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "64c2c3e2b3b3a76ea49b30fa",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "JATAÍ",
+    "ID CIDADE": "5e90809385d763273b8cfd5d",
+    "ID ENDEREÇO": "66100ab1c18dca41f677a732",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "LUZIÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd4d",
+    "ID ENDEREÇO": "65ae9d502f07a8a7205d462c",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "PORANGATU",
+    "ID CIDADE": "5e90809385d763273b8cfcda",
+    "ID ENDEREÇO": "67f93ac1c242a262f157a47e",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "65ca48c0f9725f49996b38b0",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "62ee9c43c0bc67840c80dc2c",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "6720fd754a3fd828ef05ea6b",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "64c2c3e2b3b3a76ea49b30fa",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "ITUMBIARA",
+    "ID CIDADE": "5e90809385d763273b8cfd7f",
+    "ID ENDEREÇO": "684c5b97467f463f06cae783",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "SANTA HELENA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd65",
+    "ID ENDEREÇO": "685aecd423e1e297d0ffce0f",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "ACREÚNA",
+    "ID CIDADE": "5e90809385d763273b8cfd69",
+    "ID ENDEREÇO": "685aecd423e1e2b74cffce15",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "BUNGE",
+    "CIDADE": "COCALZINHO DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd49",
+    "ID ENDEREÇO": "6883bd63e87f101a4d1ce454",
+    "ID DO SISTEMA": "64affbaf5474b3ec89be1681"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "COCALZINHO DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd49",
+    "ID ENDEREÇO": "68111b0753b82f236c21d98a",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "683daffe10484baebb5ccd0d",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "64c2c3e2b3b3a76ea49b30fa",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "CATALÃO",
+    "ID CIDADE": "5e90809385d763273b8cfd96",
+    "ID ENDEREÇO": "663bbab91cf76c07cb7fdae1",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "CAMPO ALEGRE DE GOIÁS",
+    "ID CIDADE": "66437027642fc067a2e3916a",
+    "ID ENDEREÇO": "5e90809385d763273b8cfd95",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "NIQUELANDIA",
+    "ID CIDADE": "5e90809385d763273b8cfcd8",
+    "ID ENDEREÇO": "671953fc6132711dfd8db833",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "PALMEIRAS DE GOIÁS",
+    "ID CIDADE": "683f412b1b680e22e57530f7",
+    "ID ENDEREÇO": "5e90809385d763273b8cfd70",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "SÃO MIGUEL DO ARAGUAIA",
+    "ID CIDADE": "683f454595e5c2c2485ad779",
+    "ID ENDEREÇO": "5e90809385d763273b8cfcba",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "BELA VISTA DE GOIÁS",
+    "ID CIDADE": "6849a37c4827e442fb85d405",
+    "ID ENDEREÇO": "5e90809385d763273b8cfd29",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "GOIATUBA",
+    "ID CIDADE": "684c5d0931ae49d615c24b7f",
+    "ID ENDEREÇO": "5e90809385d763273b8cfd7d",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "CAIAPÔNIA",
+    "ID CIDADE": "685d92ebdf98ab228b71b057",
+    "ID ENDEREÇO": "5e90809385d763273b8cfd59",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "DOVERLÂNDIA",
+    "ID CIDADE": "685d92ebdf98abe38f71b051",
+    "ID ENDEREÇO": "5e90809385d763273b8cfd5c",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "PORANGATU",
+    "ID CIDADE": "5e90809385d763273b8cfcda",
+    "ID ENDEREÇO": "68641204fa0929c656086e0c",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "SILVÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd91",
+    "ID ENDEREÇO": "68641b485c24630bfdec28ed",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "VIANÓPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfd93",
+    "ID ENDEREÇO": "68641b485c2463e7e4ec28f3",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "PONTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd86",
+    "ID ENDEREÇO": "68656a783bfe5c5ddf9933e7",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "PADRE BERNARDO",
+    "ID CIDADE": "5e90809385d763273b8cfd50",
+    "ID ENDEREÇO": "6883d26ab86a456e6e5e14b4",
+    "ID DO SISTEMA": "663bbab91cf76c44067fdadf"
+  },
+  {
+    "EMPRESA": "ADM DO BRASIL LTDA",
+    "CIDADE": "CRISTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd4b",
+    "ID ENDEREÇO": "68111b0753b82f236c21d98a",
+    "ID DO SISTEMA": "67ee9039ecf43f76d373166f"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "MONTIVIDIU",
+    "ID CIDADE": "5e90809385d763273b8cfd60",
+    "ID ENDEREÇO": "65ca190016cb9269418693b3",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "SÃO SIMÃO",
+    "ID CIDADE": "5e90809385d763273b8cfda6",
+    "ID ENDEREÇO": "65ca190016cb924a348693cb",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "MINEIROS",
+    "ID CIDADE": "5e90809385d763273b8cfd5f",
+    "ID ENDEREÇO": "65ca190016cb922ba58693c5",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "CHAPADÃO DO CÉU",
+    "ID CIDADE": "5e90809385d763273b8cfd5b",
+    "ID ENDEREÇO": "65ca190016cb921e1a8693bc",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "JATAÍ",
+    "ID CIDADE": "5e90809385d763273b8cfd5d",
+    "ID ENDEREÇO": "65ca124d86d2888dd7894d23",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "67097d79192fbde98f552642",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "MONTIVIDIU",
+    "ID CIDADE": "5e90809385d763273b8cfd60",
+    "ID ENDEREÇO": "65ca190016cb92908b8693b6",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "ITUMBIARA",
+    "ID CIDADE": "5e90809385d763273b8cfd7f",
+    "ID ENDEREÇO": "65ca190016cb92cf0a8693c8",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "6720fd754a3fd828ef05ea6b",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "64c2c3e2b3b3a76ea49b30fa",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "NIQUELANDIA",
+    "ID CIDADE": "5e90809385d763273b8cfcd8",
+    "ID ENDEREÇO": "672134ac4b4243833b9d5f35",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "COCALZINHO DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd49",
+    "ID ENDEREÇO": "67814adcbed0ed5582ac75fa",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "RIO VERDE",
+    "ID CIDADE": "5e90809385d763273b8cfd64",
+    "ID ENDEREÇO": "65ca190016cb92bc548693b9",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "ANÁPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfcfc",
+    "ID ENDEREÇO": "6389fa90c1c267811e9028ef",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "SILVÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd91",
+    "ID ENDEREÇO": "64874a1fe2740e1e60a98b8b",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "BELA VISTA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd29",
+    "ID ENDEREÇO": "65c11c4174b854a7ceab198b",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "CAIAPÔNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd59",
+    "ID ENDEREÇO": "65ca190016cb9247c48693bf",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "JATAÍ",
+    "ID CIDADE": "5e90809385d763273b8cfd5d",
+    "ID ENDEREÇO": "65ca190016cb9258d38693c2",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "MORRINHOS",
+    "ID CIDADE": "5e90809385d763273b8cfd83",
+    "ID ENDEREÇO": "67f69f415d061a29c7badb6c",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "PIRACANJUBA",
+    "ID CIDADE": "5e90809385d763273b8cfd85",
+    "ID ENDEREÇO": "6839eb4a8e587c9846b6625e",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "PONTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd86",
+    "ID ENDEREÇO": "67f962b71528f48e799925a6",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "SÃO MIGUEL DO ARAGUAIA",
+    "ID CIDADE": "5e90809385d763273b8cfcba",
+    "ID ENDEREÇO": "68471ad59622bdd77f1e3767",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "BURITI ALEGRE",
+    "ID CIDADE": "5e90809385d763273b8cfd79",
+    "ID ENDEREÇO": "685adeebd4428a20f3319457",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "NOVA CRIXÁS",
+    "ID CIDADE": "5e90809385d763273b8cfcb8",
+    "ID ENDEREÇO": "684c6bf58bca66b4a6ccfe39",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "CHAPADÃO DO CÉU",
+    "ID CIDADE": "5e90809385d763273b8cfd5b",
+    "ID ENDEREÇO": "65ca190016cb921e1a8693bc",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "LDC",
+    "CIDADE": "MINEIROS",
+    "ID CIDADE": "5e90809385d763273b8cfd5f",
+    "ID ENDEREÇO": "65ca190016cb922ba58693c5",
+    "ID DO SISTEMA": "6389fb50f72da4a9aa00314d"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "ANÁPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfcfc",
+    "ID ENDEREÇO": "67c9eda34d931933946ae00a",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "NOVO PLANALTO",
+    "ID CIDADE": "5e90809385d763273b8cfcb9",
+    "ID ENDEREÇO": "64c2c3e2b3b3a76ea49b30fa",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "RIO VERDE",
+    "ID CIDADE": "5e90809385d763273b8cfd64",
+    "ID ENDEREÇO": "6513115ad8cf7271783d5c52",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "SANT CRUZ DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd8f",
+    "ID ENDEREÇO": "65b7e1ebd6eb2c1e730c22b6",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "MORRINHOS",
+    "ID CIDADE": "5e90809385d763273b8cfd83",
+    "ID ENDEREÇO": "65b7e1ebd6eb2c3c5d0c22b9",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "PARAÚNA",
+    "ID CIDADE": "5e90809385d763273b8cfd72",
+    "ID ENDEREÇO": "65b7e1ebd6eb2c43110c22bc",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "SANTA CRUZ DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd8f",
+    "ID ENDEREÇO": "65c11da9e4ce9e3afe87d0dd",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "URUAÇU",
+    "ID CIDADE": "5e90809385d763273b8cfcde",
+    "ID ENDEREÇO": "65ca4e86f9725f32a06bf5a5",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "SANTA HELENA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd65",
+    "ID ENDEREÇO": "65ccf3e6a4f014155c94eeb4",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "ACREÚNA",
+    "ID CIDADE": "5e90809385d763273b8cfd69",
+    "ID ENDEREÇO": "65dcbe2bdd24a13158a3ec4f",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "MONTIVIDIU",
+    "ID CIDADE": "5e90809385d763273b8cfd60",
+    "ID ENDEREÇO": "65dcbe2bdd24a13de0a3ec4c",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "NIQUELANDIA",
+    "ID CIDADE": "5e90809385d763273b8cfcd8",
+    "ID ENDEREÇO": "672134ac4b4243833b9d5f35",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "COCALZINHO DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd49",
+    "ID ENDEREÇO": "67814adcbed0ed5582ac75fa",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "ITUMBIARA",
+    "ID CIDADE": "5e90809385d763273b8cfd7f",
+    "ID ENDEREÇO": "684c653b31ae4980e6c2bcf3",
+    "ID DO SISTEMA": "65131159d8cf72e42c3d5c50"
+  },
+  {
+    "EMPRESA": "CARGILL",
+    "CIDADE": "QUIRINÓPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfda5",
+    "ID ENDEREÇO": "6331ecf486b452078f09ea2f",
+    "ID DO SISTEMA": "6331ecf486b45271fe09ea2e"
+  },
+  {
+    "EMPRESA": "JAGUAFRANGOS",
+    "CIDADE": "JAGUAPITÃ",
+    "ID CIDADE": "5e90809385d763273b8cf7c3",
+    "ID ENDEREÇO": "687f8fbfbbc6eef6f53cc8d0",
+    "ID DO SISTEMA": "67b8a60bb950151d1dd88f22"
+  },
+  {
+    "EMPRESA": "JAGUAFRANGOS",
+    "CIDADE": "PALMEIRAS DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd70",
+    "ID ENDEREÇO": "67b8a60cb95015acb7d88f26",
+    "ID DO SISTEMA": "67b8a60bb950151d1dd88f22"
+  },
+  {
+    "EMPRESA": "JAGUAFRANGOS",
+    "CIDADE": "CASCAVEL",
+    "ID CIDADE": "5e90809385d763273b8cf85f",
+    "ID ENDEREÇO": "688241e87eeaeeb084f405f8",
+    "ID DO SISTEMA": "67b8a60bb950151d1dd88f22"
+  },
+  {
+    "EMPRESA": "JAGUAFRANGOS",
+    "CIDADE": "GOIATUBA",
+    "ID CIDADE": "5e90809385d763273b8cfd7d",
+    "ID ENDEREÇO": "687f95215460dc79d7eb9970",
+    "ID DO SISTEMA": "67b8a60bb950151d1dd88f22"
+  },
+  {
+    "EMPRESA": "JAGUAFRANGOS",
+    "CIDADE": "WENCESLAU BRAZ",
+    "ID CIDADE": "5e90809385d763273b8cf835",
+    "ID ENDEREÇO": "687f9168bbc6ee14353cd766",
+    "ID DO SISTEMA": "67b8a60bb950151d1dd88f22"
+  },
+  {
+    "EMPRESA": "JAGUAFRANGOS",
+    "CIDADE": "XANXERÊ",
+    "ID CIDADE": "5e90809385d763273b8cf93c",
+    "ID ENDEREÇO": "687f8f405460dc8264eb70c6",
+    "ID DO SISTEMA": "67b8a60bb950151d1dd88f22"
+  },
+  {
+    "EMPRESA": "OLFAR",
+    "CIDADE": "PORANGATU",
+    "ID CIDADE": "5e90809385d763273b8cfcda",
+    "ID ENDEREÇO": "6638e1a1ab55143dd43ccf4c",
+    "ID DO SISTEMA": "6638e1a1ab55145dbf3ccf4a"
+  },
+  {
+    "EMPRESA": "OLFAR",
+    "CIDADE": "PORANGATU",
+    "ID CIDADE": "5e90809385d763273b8cfcda",
+    "ID ENDEREÇO": "65b7c7e8a89cc721e31d55da",
+    "ID DO SISTEMA": "65a96b40f3080d7967554aa4"
+  },
+  {
+    "EMPRESA": "OLFAR",
+    "CIDADE": "ERECHIM",
+    "ID CIDADE": "5e90809385d763273b8cfa5c",
+    "ID ENDEREÇO": "66352d9a3269c9581175103d",
+    "ID DO SISTEMA": "65a96b40f3080d7967554aa4"
+  },
+  [
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CATALÃO",
+    "ID CIDADE": "5e90809385d763273b8cfd96",
+    "ID ENDEREÇO": "651ac2190eecab321adcc509",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CRISTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd4b",
+    "ID ENDEREÇO": "651acda75a9a3c93f187fdd0",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "AGUA FRIA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd44",
+    "ID ENDEREÇO": "651ace38552b737e80ecd1d1",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PADRE BERNARDO",
+    "ID CIDADE": "5e90809385d763273b8cfd50",
+    "ID ENDEREÇO": "651acee3552b7330aeed41a5",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CABECEIRAS",
+    "ID CIDADE": "5e90809385d763273b8cfd47",
+    "ID ENDEREÇO": "651acf32552b7386a0ed74a0",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "FORMOSA",
+    "ID CIDADE": "5e90809385d763273b8cfd4c",
+    "ID ENDEREÇO": "651acf91552b735d73edaa32",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "SILVÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd91",
+    "ID ENDEREÇO": "651ad05d552b736e59ee2ff8",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PARAÚNA",
+    "ID CIDADE": "5e90809385d763273b8cfd72",
+    "ID ENDEREÇO": "651ad17b5a9a3c81c388e235",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "MONTES CLAROS DE GOIAS",
+    "ID CIDADE": "5e90809385d763273b8cfcca",
+    "ID ENDEREÇO": "651ad2285a9a3c185789153b",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CAIAPÔNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd59",
+    "ID ENDEREÇO": "651ad2a6a0ac8d13b1a8c0be",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "SANTA HELENA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd65",
+    "ID ENDEREÇO": "651ad4109b3a3237b157de4b",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "MONTIVIDIU",
+    "ID CIDADE": "5e90809385d763273b8cfd60",
+    "ID ENDEREÇO": "651ad4b04e991d1de8c6e882",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "RIO VERDE",
+    "ID CIDADE": "5e90809385d763273b8cfd64",
+    "ID ENDEREÇO": "651ad5374e991db079c715c1",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "JATAÍ",
+    "ID CIDADE": "5e90809385d763273b8cfd5d",
+    "ID ENDEREÇO": "651ad5849b3a326ccb588f14",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "MINEIROS",
+    "ID CIDADE": "5e90809385d763273b8cfd5f",
+    "ID ENDEREÇO": "651ad5bc9b3a32737958b2c6",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PONTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd86",
+    "ID ENDEREÇO": "651ad6894e991d07acc7d51f",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PIRACANJUBA",
+    "ID CIDADE": "5e90809385d763273b8cfd85",
+    "ID ENDEREÇO": "651ad6efc2a0a055987b5235",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "BOM JESUS DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd78",
+    "ID ENDEREÇO": "651ad73b3c09a1dbb025d041",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "ITUMBIARA",
+    "ID CIDADE": "5e90809385d763273b8cfd7f",
+    "ID ENDEREÇO": "67f533026e18c5abbaeaf2d7",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "SERRANÓPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfd68",
+    "ID ENDEREÇO": "681cf5729f1ad334715f13be",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PALMEIRAS DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd70",
+    "ID ENDEREÇO": "681cf5729f1ad351795f13d6",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  }
+]
+]

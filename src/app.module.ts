@@ -11,12 +11,13 @@ import { TranscriptionModule } from './transcription/transcription.module';
 import { WhatsAppModule } from './whatsapp/whatsapp.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
+import openaiConfig from './config/openai.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig],
+      load: [appConfig, openaiConfig, databaseConfig],
     }),
     TypeOrmModule.forRoot(databaseConfig()),
     ProcessingModule,
@@ -30,4 +31,3 @@ import appConfig from './config/app.config';
   providers: [AppService],
 })
 export class AppModule {}
-
