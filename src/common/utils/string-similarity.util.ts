@@ -82,6 +82,9 @@ export class StringSimilarityUtil {
    * Normaliza uma string removendo acentos, convertendo para minúsculo e normalizando espaços
    */
   static normalizeString(str: string): string {
+    if (str === undefined || str === null) {
+      return '';
+    }
     return str
       .toLowerCase()
       .normalize('NFD')

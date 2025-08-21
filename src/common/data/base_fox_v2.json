@@ -754,5 +754,154 @@
     "ID CIDADE": "5e90809385d763273b8cfa5c",
     "ID ENDEREÇO": "66352d9a3269c9581175103d",
     "ID DO SISTEMA": "65a96b40f3080d7967554aa4"
+  },
+  [
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CATALÃO",
+    "ID CIDADE": "5e90809385d763273b8cfd96",
+    "ID ENDEREÇO": "651ac2190eecab321adcc509",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CRISTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd4b",
+    "ID ENDEREÇO": "651acda75a9a3c93f187fdd0",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "AGUA FRIA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd44",
+    "ID ENDEREÇO": "651ace38552b737e80ecd1d1",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PADRE BERNARDO",
+    "ID CIDADE": "5e90809385d763273b8cfd50",
+    "ID ENDEREÇO": "651acee3552b7330aeed41a5",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CABECEIRAS",
+    "ID CIDADE": "5e90809385d763273b8cfd47",
+    "ID ENDEREÇO": "651acf32552b7386a0ed74a0",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "FORMOSA",
+    "ID CIDADE": "5e90809385d763273b8cfd4c",
+    "ID ENDEREÇO": "651acf91552b735d73edaa32",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "SILVÂNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd91",
+    "ID ENDEREÇO": "651ad05d552b736e59ee2ff8",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PARAÚNA",
+    "ID CIDADE": "5e90809385d763273b8cfd72",
+    "ID ENDEREÇO": "651ad17b5a9a3c81c388e235",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "MONTES CLAROS DE GOIAS",
+    "ID CIDADE": "5e90809385d763273b8cfcca",
+    "ID ENDEREÇO": "651ad2285a9a3c185789153b",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "CAIAPÔNIA",
+    "ID CIDADE": "5e90809385d763273b8cfd59",
+    "ID ENDEREÇO": "651ad2a6a0ac8d13b1a8c0be",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "SANTA HELENA DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd65",
+    "ID ENDEREÇO": "651ad4109b3a3237b157de4b",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "MONTIVIDIU",
+    "ID CIDADE": "5e90809385d763273b8cfd60",
+    "ID ENDEREÇO": "651ad4b04e991d1de8c6e882",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "RIO VERDE",
+    "ID CIDADE": "5e90809385d763273b8cfd64",
+    "ID ENDEREÇO": "651ad5374e991db079c715c1",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "JATAÍ",
+    "ID CIDADE": "5e90809385d763273b8cfd5d",
+    "ID ENDEREÇO": "651ad5849b3a326ccb588f14",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "MINEIROS",
+    "ID CIDADE": "5e90809385d763273b8cfd5f",
+    "ID ENDEREÇO": "651ad5bc9b3a32737958b2c6",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PONTALINA",
+    "ID CIDADE": "5e90809385d763273b8cfd86",
+    "ID ENDEREÇO": "651ad6894e991d07acc7d51f",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PIRACANJUBA",
+    "ID CIDADE": "5e90809385d763273b8cfd85",
+    "ID ENDEREÇO": "651ad6efc2a0a055987b5235",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "BOM JESUS DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd78",
+    "ID ENDEREÇO": "651ad73b3c09a1dbb025d041",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "ITUMBIARA",
+    "ID CIDADE": "5e90809385d763273b8cfd7f",
+    "ID ENDEREÇO": "67f533026e18c5abbaeaf2d7",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "SERRANÓPOLIS",
+    "ID CIDADE": "5e90809385d763273b8cfd68",
+    "ID ENDEREÇO": "681cf5729f1ad334715f13be",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
+  },
+  {
+    "EMPRESA": "BTG",
+    "CIDADE": "PALMEIRAS DE GOIÁS",
+    "ID CIDADE": "5e90809385d763273b8cfd70",
+    "ID ENDEREÇO": "681cf5729f1ad351795f13d6",
+    "ID DO SISTEMA": "651ac1eecc68060c6cffe892"
   }
+]
 ]
